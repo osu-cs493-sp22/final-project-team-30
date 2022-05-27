@@ -4,7 +4,9 @@
   "description": "CS 493 Spring 2022 Final Project Team 30: A lightweight course management tool that's an \"alternative\" to Canvas. ",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
