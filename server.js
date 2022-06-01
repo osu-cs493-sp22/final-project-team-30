@@ -1,5 +1,6 @@
 //const { applyRateLimit } = require('./ratelimiter')
 const express = require('express')
+const morgan = require('morgan')
 const { connectToDb } = require("./lib/mongo")
 //const { optionalAuthentication } = require('./lib/auth')
 
@@ -8,6 +9,8 @@ const port = process.env.PORT || 8000
 
 //app.use(applyRateLimit)
 //app.use(optionalAuthentication)
+
+app.use(morgan('dev'))
 app.use(express.json())
 
 connectToDb(async () => {
