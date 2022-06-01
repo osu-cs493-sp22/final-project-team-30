@@ -1,5 +1,28 @@
 # CS 493 Final Project - Team 30
 
+## Docker Compose 
+
+The docker compose specification for this project allows the API server to be spun up with any dependent services. 
+Further, this specidication is geared towards development so it will mount you repository, install the node dependencies in it and monitor the directory for changes. This specifaction should be launched with:
+```
+$ docker-compose up
+```
+Should more dependencies be needed to complete a task, they can be installed by running a onetime service and install that dependency. 
+This will also change your package.json file, so if you do not want to add it as an official project dependency make sure to include the --no-save option. This can be done by substituting your dependency for nodemon below: 
+
+```
+$ docker-compose run api bash
+> # npm install nodemon
+> # npm install --no-save nodemon
+> # exit
+$
+```
+This development environment is mainly meant to handle changes to the api server and any files belonging to it. 
+Should it not work, need to be changed or stopped, bringing the compose services down is important in making sure that there are not multiple verions of the same service running, which can be annoying: 
+
+```
+$ docker-compose down
+```
 
 ## Branching Strategy
 

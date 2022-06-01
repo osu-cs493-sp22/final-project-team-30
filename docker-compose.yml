@@ -1,0 +1,32 @@
+version: "3.3"
+services:
+   db: 
+      image: mongo
+      environment:
+         MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+         MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+         MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+      volumes:
+         - ./initMongo.js:/docker-entrypoint-initdb.d/mongo-init.js
+   
+   redis:
+      image: redis
+
+   api:
+      build: .
+      ports: 
+         - 8000:8000
+      volumes: 
+         - .:/usr/src/app
+      environment: 
+         MONGO_HOST: db
+         MONGO_USER: ${MONGO_USER}
+         MONGO_PASSWORD: ${MONGO_PASSWORD}
+         MONGO_DB_NAME: ${MONGO_DB_NAME}
+         REDIS_HOST: ${REDIS_HOST}
+         REDIS_PORT: ${REDIS_PORT} 
+      depends_on:
+         - db
+         - redis
+      restart: on-failure
+      command: bash -c "npm install && npm install -g --no-save nodemon && npm run dev"

@@ -1,0 +1,32 @@
+{
+  "name": "tarpaulin",
+  "version": "1.0.0",
+  "description": "CS 493 Spring 2022 Final Project Team 30: A lightweight course management tool that's an \"alternative\" to Canvas. ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osu-cs493-sp22/final-project-team-30.git"
+  },
+  "author": "Benjiman Walsh <walshb@oregonstate.edu> Garett Goodlake <goodlakg@oregonstate.edu> Timur Ermoshkin <ermoshkt@oregonstate.edu> Eric Hoang <hoanger@oregonstate.edu>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/osu-cs493-sp22/final-project-team-30/issues"
+  },
+  "homepage": "https://github.com/osu-cs493-sp22/final-project-team-30#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.6.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "redis": "^4.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
