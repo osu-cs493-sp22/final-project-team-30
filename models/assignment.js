@@ -26,6 +26,8 @@ exports.insertNewAssignment = async function insertNewAssignment(assignment) {
 	// Get only valid information
 	assignment = extractValidFields(assignment, assignmentSchema);
 
+	assignment.courseId = new ObjectId(assignment.courseId)
+
 	// Put into the db and return the id of the inserted assignment
 	const result = await collection.insertOne(assignment)
 	return result.insertedId

@@ -37,14 +37,14 @@ exports.insertNewCourse = async function insertNewCourse(course) {
 /*
  * Get information about an course
  */
-exports.getCourseById = async function getCourseById(courseId) {
+exports.getCourseById = async function getCourseById(id) {
 	// Open up the db
 	const db = getDbReference();
 	const collection = db.collection('courses');
 
 	// Search the collection for an course matching the ID
 	const course = await collection.aggregate([
-		{ $match: { _id: new ObjectId(courseId) } },
+		{ $match: { _id: new ObjectId(id) } },
 	]).toArray()
 
 	return course[0]
@@ -53,7 +53,7 @@ exports.getCourseById = async function getCourseById(courseId) {
 /*
  * Update an course
  */
-exports.updateCourseById = async function updateCourse(courseId, course) {
+exports.updateCourseById = async function updateCourse(id, course) {
 	// Open up the db
 	const db = getDbReference();
 	const collection = db.collection('courses');
@@ -70,7 +70,7 @@ exports.updateCourseById = async function updateCourse(courseId, course) {
 	
 	// Update
 	const result = await collection.replaceOne({
-		_id: new ObjectId(courseId) },
+		_id: new ObjectId(id) },
 		newCourseValues
 	);
 
@@ -81,43 +81,101 @@ exports.updateCourseById = async function updateCourse(courseId, course) {
 /*
  * Delete an course from the db
  */
-exports.deleteCourseById = async function deleteCourseById(courseId) {
+exports.deleteCourseById = async function deleteCourseById(id) {
 	// Open up the db
 	const db = getDbReference();
 	const collection = db.collection('courses');
 	
 	// Delete the corresponding course
 	const result = await collection.deleteOne({
-		_id: new ObjectId(courseId)
+		_id: new ObjectId(id)
 	});
 
 	// If > 0 then delete was successful
 	return result.deletedCount > 0;
 }
 
-exports.getCoursesPage = async function getCoursesPage(page) {
-  const db = getDbReference();
-  const collection = db.collection('courses');
-  const count = await collection.countDocuments();
+exports.getCoursePage = async function getCoursePage(page) {
+	// Open up the db
+	const db = getDbReference();
+	const collection = db.collection('courses');
 
-  const pageSize = 10;
-  const lastPage = Math.ceil(count / pageSize);
-  page = page > lastPage ? lastPage : page;
-  page = page < 1 ? 1 : page;
-  const offset = (page - 1) * pageSize;
+	// Count the total # of courses in the DB
+	const count = await collection.countDocuments();
 
-  const results = await collection.find({})
-    .sort({ _id: 1 })
-    .skip(offset)
-    .limit(pageSize)
-    .toArray();
+	// Calculate pagination values
+	const pageSize = 10;
+	const lastPage = Math.ceil(count / pageSize);
+	page = page < 1 ? 1 : page;
+	const offset = (page - 1) * pageSize;
 
-  return {
-    courses: results,
-    page: page,
-    totalPages: lastPage,
-    pageSize: pageSize,
-    count: count
-  };
+	// Get page
+	const results = await collection.find({})
+		.sort({ _id: 1 })
+		.skip(offset)
+		.limit(pageSize)
+		.toArray();
+
+	return {
+		courses: results,
+		page: page,
+		totalPages: lastPage,
+		pageSize: pageSize,
+		count: count
+	};	
 }
 
+exports.getCourseStudents = async function getCourseStudents(id) {
+	// Open up the db
+	const db = getDbReference();
+	const collection = db.collection('courses');
+
+	// Without this if someone enters a wrong id thats less chars it crashes..
+	if (id.length < 24) {
+		return null
+	}
+
+	// Find the
+	const courseStudents = await collection.aggregate([
+		{ $match: { _id: new ObjectId(id) } }
+	]).toArray()
+
+	// Check if there was any result, if not this will go to 404
+	if (courseStudents[0] === undefined) {
+		return null
+	}
+
+	// Check if there are any students in the course, if not return empty arr
+	if (courseStudents[0].students === undefined) {
+		return []
+	}
+	
+	// If we get here there should be students
+	return courseStudents[0].students
+}
+
+exports.getCourseAssignments = async function getCourseAssignments(id) {
+	// Open up the db
+	const db = getDbReference();
+	const collection = db.collection('courses');	
+
+	// Without this if someone enters a wrong id thats less chars it crashes..
+	if (id.length < 24) {
+		return null
+	}
+
+	// Find the
+	const course = await collection.aggregate([
+		{ $match: { _id: new ObjectId(id) } },
+		{
+			$lookup: {
+				from: "assignments",
+				localField: "_id",
+				foreignField: "courseId",
+				as: "assignments"
+			}
+		}
+	]).toArray()
+
+	return course[0]
+}

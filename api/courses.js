@@ -9,7 +9,10 @@ const {
 	updateCourseById,
 	deleteCourseById,
 	getCourseById,
-	courseSchema
+	getCoursePage,
+	courseSchema,
+	getCourseStudents,
+	getCourseAssignments
 } = require('../models/course');
 
 /*
@@ -32,10 +35,10 @@ router.post('/', async function (req, res) {
 })
 
 /*
- * Route to get an course by ID
+ * Route to get a course by ID
  */
-router.get('/:courseId', async function (req, res, next) {
-	const course = await getCourseById(req.params.courseId)
+router.get('/:id', async function (req, res, next) {
+	const course = await getCourseById(req.params.id)
 	if (course) {
 		res.status(200).send(course)
 	} else {
@@ -44,11 +47,11 @@ router.get('/:courseId', async function (req, res, next) {
 })
 
 /*
- * Route to update an course by ID
+ * Route to update a course by ID
  */
-router.put('/:courseId', async function (req, res, next) {
+router.put('/:id', async function (req, res, next) {
 	if (validateAgainstSchema(req.body, courseSchema)) {
-		const updateSuccessful = await updateCourseById(req.params.courseId, req.body)
+		const updateSuccessful = await updateCourseById(req.params.id, req.body)
 		if (updateSuccessful) {
 			res.status(204).send();
 		} else {
@@ -61,11 +64,74 @@ router.put('/:courseId', async function (req, res, next) {
 	}
 })
 
-router.delete('/:courseId', async function (req, res, next) {
-	const deleteSuccessful = await deleteCourseById(req.params.courseId)
+/*
+ * Route to delete a course by ID
+ */
+router.delete('/:id', async function (req, res, next) {
+	const deleteSuccessful = await deleteCourseById(req.params.id)
 	if (deleteSuccessful) {
 		res.status(204).end();
 	} else {
 		next();
 	}
 });
+
+/*
+ * Route to get a page for a course
+ */
+router.get('/', async function(req, res) {
+	// Get page based on results
+	const results = await getCoursePage(parseInt(req.query.page) || 1);
+	coursePage = results.courses
+	currPage = results.page
+	lastPage = results.lastPage
+	numPerPage = results.pageSize
+	totalCount = results.totalCount
+
+	
+	// Generate HATEOAS links for surrounding pages.
+	const links = {};
+	if (currPage < lastPage) {
+		links.nextPage = `/courses?page=${currPage + 1}`;
+		links.lastPage = `/courses?page=${lastPage}`;
+	}
+	if (currPage > 1) {
+		links.prevPage = `/courses?page=${currPage - 1}`;
+		links.firstPage = '/courses?page=1';
+	}
+
+	// Send back response
+	res.status(200).json({
+		courses: coursePage,
+		pageNumber: currPage,
+		totalPages: lastPage,
+		pageSize: numPerPage,
+		totalCount: totalCount,
+		links: links
+	  });
+})
+
+/*
+ * Route to get all students enrolled in a course (Currently not connectd to users)
+ */
+router.get('/:id/students', async function(req, res, next) {
+	const students = await getCourseStudents(req.params.id)
+	if(students) {
+		res.status(200).send(students)
+	} else {
+		next()
+	}
+})
+
+/*
+ * Route to get all assignments connected to a course
+ */
+
+router.get('/:id/assignments', async function(req, res, next) {
+	const assignments = await getCourseAssignments(req.params.id)
+	if (assignments) {
+		res.status(200).send(assignments)
+	} else {
+		next()
+	}
+})
