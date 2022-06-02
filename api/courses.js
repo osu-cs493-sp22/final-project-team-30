@@ -34,9 +34,15 @@ router.post('/', async function (req, res) {
 	}
 })
 
+/*
+ * Route to get a page for a course
+ */
 router.get('/', async (req, res) => {
   try {
-    const coursePage = await getCoursesPage(parseInt(req.query.page) || 1);
+	// Get page
+    const coursePage = await getCoursePage(parseInt(req.query.page) || 1);
+
+	// Generate HATEOAS links for surrounding pages.
     coursePage.links = {};
     if (coursePage.page < coursePage.totalPages) {
       coursePage.links.nextPage = `/courses?page=${coursePage.page + 1}`;
@@ -47,13 +53,14 @@ router.get('/', async (req, res) => {
       coursePage.links.firstPage = '/courses?page=1';
     }
     
+	// Send Page
     res.status(200).send(coursePage);
   } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      error: "Error fetching courses list.  Please try again later."
-    })
-  }
+		console.error(err);
+		res.status(500).send({
+			error: "Error fetching courses list.  Please try again later."
+		})
+  	}
 })
 
 
@@ -100,7 +107,7 @@ router.delete('/:id', async function (req, res, next) {
 });
 
 /*
- * Route to get a page for a course
+ * Route to get a page for a course (old)
  */
   
  /*
