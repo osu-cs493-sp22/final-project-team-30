@@ -9,6 +9,7 @@ const {
 	updateCourseById,
 	deleteCourseById,
 	getCourseById,
+	getCoursePage,
 	courseSchema
 } = require('../models/course');
 
@@ -32,7 +33,7 @@ router.post('/', async function (req, res) {
 })
 
 /*
- * Route to get an course by ID
+ * Route to get a course by ID
  */
 router.get('/:courseId', async function (req, res, next) {
 	const course = await getCourseById(req.params.courseId)
@@ -44,7 +45,7 @@ router.get('/:courseId', async function (req, res, next) {
 })
 
 /*
- * Route to update an course by ID
+ * Route to update a course by ID
  */
 router.put('/:courseId', async function (req, res, next) {
 	if (validateAgainstSchema(req.body, courseSchema)) {
@@ -61,6 +62,9 @@ router.put('/:courseId', async function (req, res, next) {
 	}
 })
 
+/*
+ * Route to delete a course by ID
+ */
 router.delete('/:courseId', async function (req, res, next) {
 	const deleteSuccessful = await deleteCourseById(req.params.courseId)
 	if (deleteSuccessful) {
@@ -69,3 +73,38 @@ router.delete('/:courseId', async function (req, res, next) {
 		next();
 	}
 });
+
+/*
+ * Route to get a page for a course
+ */
+router.get('/', async function(req, res) {
+	// Get page based on results
+	const results = await getCoursePage(parseInt(req.query.page) || 1);
+	coursePage = results.courses
+	currPage = results.page
+	lastPage = results.lastPage
+	numPerPage = results.pageSize
+	totalCount = results.totalCount
+
+	
+	// Generate HATEOAS links for surrounding pages.
+	const links = {};
+	if (currPage < lastPage) {
+		links.nextPage = `/courses?page=${currPage + 1}`;
+		links.lastPage = `/courses?page=${lastPage}`;
+	}
+	if (currPage > 1) {
+		links.prevPage = `/courses?page=${currPage - 1}`;
+		links.firstPage = '/courses?page=1';
+	}
+
+	// Send back response
+	res.status(200).json({
+		courses: coursePage,
+		pageNumber: currPage,
+		totalPages: lastPage,
+		pageSize: numPerPage,
+		totalCount: totalCount,
+		links: links
+	  });
+})

@@ -94,3 +94,33 @@ exports.deleteCourseById = async function deleteCourseById(courseId) {
 	// If > 0 then delete was successful
 	return result.deletedCount > 0;
 }
+
+exports.getCoursePage = async function getCoursePage(page) {
+	// Open up the db
+	const db = getDbReference();
+	const collection = db.collection('courses');
+
+	// Count the total # of courses in the DB
+	const count = await collection.countDocuments();
+
+	// Calculate pagination values
+	const pageSize = 2;
+	const lastPage = Math.ceil(count / pageSize);
+	page = page < 1 ? 1 : page;
+	const offset = (page - 1) * pageSize;
+
+	// Get page
+	const results = await collection.find({})
+		.sort({ _id: 1 })
+		.skip(offset)
+		.limit(pageSize)
+		.toArray();
+
+	return {
+		courses: results,
+		page: page,
+		totalPages: lastPage,
+		pageSize: pageSize,
+		count: count
+	};	
+}
