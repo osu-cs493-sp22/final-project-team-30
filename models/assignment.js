@@ -40,13 +40,17 @@ exports.getAssignmentById = async function getAssignmentById(assignmentId) {
 	const collection = db.collection('assignments');
 
 	// Search the collection for an assignment matching the ID
-	const assignment = await 
+	const assignment = await collection.aggregate([
+		{ $match: { _id: new ObjectId(assignmentId) } },
+	]).toArray()
+
+	return assignment[0]
 }
 
 /*
  * Update an assignment
  */
-exports.updateAssignmentById = async function updateAssignment(id, assignment) {
+exports.updateAssignmentById = async function updateAssignment(assignmentId, assignment) {
 	// Open up the db
 	const db = getDbReference();
 	const collection = db.collection('assignments');
@@ -60,7 +64,7 @@ exports.updateAssignmentById = async function updateAssignment(id, assignment) {
 
 	// Find the old assignment
 	const oldAssignment = await collection.aggregate([
-		{ $match: { _id: new ObjectId(id) } }, 
+		{ $match: { _id: new ObjectId(assignmentId) } }, 
 	]).toArray()
 
 	// Check to make sure course ids are consistent. Change if not.
@@ -72,10 +76,10 @@ exports.updateAssignmentById = async function updateAssignment(id, assignment) {
 
 	// Finally, update
 	const result = await collection.replaceOne({
-		_id: new ObjectId(id) },
+		_id: new ObjectId(assignmentId) },
 		newAssignmentValues
 	);
-	
+
 	// If > 0 then update was successful
 	return result.matchedCount > 0;
 }
@@ -83,14 +87,14 @@ exports.updateAssignmentById = async function updateAssignment(id, assignment) {
 /*
  * Delete an assignment from the db
  */
-exports.deleteAssignmentById = async function deleteAssignmentById(id) {
+exports.deleteAssignmentById = async function deleteAssignmentById(assignmentId) {
 	// Open up the db
 	const db = getDbReference();
 	const collection = db.collection('assignments');
 	
 	// Delete the corresponding assignment
 	const result = await collection.deleteOne({
-		_id: new ObjectId(id)
+		_id: new ObjectId(assignmentId)
 	});
 
 	// If > 0 then delete was successful

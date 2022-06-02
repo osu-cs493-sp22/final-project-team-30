@@ -2,6 +2,8 @@ const router = require('express').Router();
 const multer = require('multer');
 const crypto = require('crypto')
 
+exports.router = router
+
 /*
  * Multer will allow us to store files on the api server
  */ 
@@ -20,7 +22,7 @@ const upload = multer({
 })
 
 const fileTypes = {
-	'application/pdf'
+	'application/pdf': 'pdf'
 }
 
 /* Assignment Submissions Endpoints Below */
