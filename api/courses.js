@@ -10,7 +10,9 @@ const {
 	deleteCourseById,
 	getCourseById,
 	getCoursePage,
-	courseSchema
+	courseSchema,
+	getCourseStudents,
+	getCourseAssignments
 } = require('../models/course');
 
 /*
@@ -35,8 +37,8 @@ router.post('/', async function (req, res) {
 /*
  * Route to get a course by ID
  */
-router.get('/:courseId', async function (req, res, next) {
-	const course = await getCourseById(req.params.courseId)
+router.get('/:id', async function (req, res, next) {
+	const course = await getCourseById(req.params.id)
 	if (course) {
 		res.status(200).send(course)
 	} else {
@@ -47,9 +49,9 @@ router.get('/:courseId', async function (req, res, next) {
 /*
  * Route to update a course by ID
  */
-router.put('/:courseId', async function (req, res, next) {
+router.put('/:id', async function (req, res, next) {
 	if (validateAgainstSchema(req.body, courseSchema)) {
-		const updateSuccessful = await updateCourseById(req.params.courseId, req.body)
+		const updateSuccessful = await updateCourseById(req.params.id, req.body)
 		if (updateSuccessful) {
 			res.status(204).send();
 		} else {
@@ -65,8 +67,8 @@ router.put('/:courseId', async function (req, res, next) {
 /*
  * Route to delete a course by ID
  */
-router.delete('/:courseId', async function (req, res, next) {
-	const deleteSuccessful = await deleteCourseById(req.params.courseId)
+router.delete('/:id', async function (req, res, next) {
+	const deleteSuccessful = await deleteCourseById(req.params.id)
 	if (deleteSuccessful) {
 		res.status(204).end();
 	} else {
@@ -107,4 +109,29 @@ router.get('/', async function(req, res) {
 		totalCount: totalCount,
 		links: links
 	  });
+})
+
+/*
+ * Route to get all students enrolled in a course (Currently not connectd to users)
+ */
+router.get('/:id/students', async function(req, res, next) {
+	const students = await getCourseStudents(req.params.id)
+	if(students) {
+		res.status(200).send(students)
+	} else {
+		next()
+	}
+})
+
+/*
+ * Route to get all assignments connected to a course
+ */
+
+router.get('/:id/assignments', async function(req, res, next) {
+	const assignments = await getCourseAssignments(req.params.id)
+	if (assignments) {
+		res.status(200).send(assignments)
+	} else {
+		next()
+	}
 })
