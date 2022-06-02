@@ -104,7 +104,7 @@ exports.getCoursePage = async function getCoursePage(page) {
 	const count = await collection.countDocuments();
 
 	// Calculate pagination values
-	const pageSize = 2;
+	const pageSize = 10;
 	const lastPage = Math.ceil(count / pageSize);
 	page = page < 1 ? 1 : page;
 	const offset = (page - 1) * pageSize;
