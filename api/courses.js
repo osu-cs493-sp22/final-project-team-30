@@ -34,6 +34,29 @@ router.post('/', async function (req, res) {
 	}
 })
 
+router.get('/', async (req, res) => {
+  try {
+    const coursePage = await getCoursesPage(parseInt(req.query.page) || 1);
+    coursePage.links = {};
+    if (coursePage.page < coursePage.totalPages) {
+      coursePage.links.nextPage = `/courses?page=${coursePage.page + 1}`;
+      coursePage.links.lastPage = `/courses?page=${coursePage.totalPages}`;
+    }
+    if (coursePage.page > 1) {
+      coursePage.links.prevPage = `/courses?page=${coursePage.page - 1}`;
+      coursePage.links.firstPage = '/courses?page=1';
+    }
+    
+    res.status(200).send(coursePage);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      error: "Error fetching courses list.  Please try again later."
+    })
+  }
+})
+
+
 /*
  * Route to get a course by ID
  */
@@ -79,6 +102,8 @@ router.delete('/:id', async function (req, res, next) {
 /*
  * Route to get a page for a course
  */
+  
+ /*
 router.get('/', async function(req, res) {
 	// Get page based on results
 	const results = await getCoursePage(parseInt(req.query.page) || 1);
@@ -110,6 +135,7 @@ router.get('/', async function(req, res) {
 		links: links
 	  });
 })
+*/
 
 /*
  * Route to get all students enrolled in a course (Currently not connectd to users)
