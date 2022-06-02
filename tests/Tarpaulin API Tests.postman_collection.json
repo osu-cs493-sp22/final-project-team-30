@@ -297,33 +297,6 @@
 					"response": []
 				},
 				{
-					"name": "Enroll Student In Course",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8000/courses/:id/students",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"courses",
-								":id",
-								"students"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": null
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get Assignments For Course",
 					"request": {
 						"method": "GET",
@@ -355,6 +328,15 @@
 					"request": {
 						"method": "PATCH",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"add\": [\r\n    ],\r\n    \"remove\": [\r\n        501\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "http://localhost:8000/courses/:id/students",
 							"protocol": "http",
@@ -370,7 +352,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": null
+									"value": "62993192816d605ef11551"
 								}
 							]
 						}
