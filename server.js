@@ -1,21 +1,20 @@
 const express = require('express')
 const morgan = require('morgan')
 const api = require('./api')
-const { connectToDb } = require("./lib/mongo")
 
+const { connectToDb } = require("./lib/mongo")
+const { connectToRedis, rateLimit } = require('./lib/rate')
 //const { optionalAuthentication } = require('./lib/auth')
-//const { applyRateLimit } = require('./ratelimiter')
 
 const app = express()
 const port = process.env.PORT || 8000
 
-//app.use(applyRateLimit)
+app.use(rateLimit)
 //app.use(optionalAuthentication)
 
 app.use(morgan('dev'))
 app.use(express.json())
 
-connectToDb(async () => {
   //exports.upload = require("./lib/multer").initializeMulter()
   app.use('/', api)
 
@@ -32,7 +31,9 @@ connectToDb(async () => {
     })
   });
 
+
+connectToRedis(connectToDb( async () => {
   app.listen(port, function() {
     console.log("== Server is running on port", port)
   })
-})
+}))
