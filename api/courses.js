@@ -12,7 +12,9 @@ const {
 	getCoursePage,
 	courseSchema,
 	getCourseStudents,
-	getCourseAssignments
+	getCourseAssignments,
+	updateCourseStudents,
+	studentUpdateSchema
 } = require('../models/course');
 
 /*
@@ -159,12 +161,29 @@ router.get('/:id/students', async function(req, res, next) {
 /*
  * Route to get all assignments connected to a course
  */
-
 router.get('/:id/assignments', async function(req, res, next) {
 	const assignments = await getCourseAssignments(req.params.id)
 	if (assignments) {
 		res.status(200).send(assignments)
 	} else {
 		next()
+	}
+})
+
+/*
+ * Route to update students enrolled in a course
+ */
+router.patch('/:id/students', async function(req, res, next) {
+	if (validateAgainstSchema(req.body, studentUpdateSchema)) {
+		const updateSuccessful = await updateCourseStudents(req.params.id, req.body)
+		if (updateSuccessful) {
+			res.status(200).send()
+		} else {
+			next()
+		}
+	} else {
+		res.status(400).json({
+			err: "The request body was either not present or did not contain proper fields"
+		})
 	}
 })

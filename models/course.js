@@ -16,6 +16,15 @@ const courseSchema = {
 	students: {required: false}
 }
 
+/*
+ * Schema describing fields for updating student enrollment
+ */
+const studentUpdateSchema = {
+	add: {required: true},
+	remove: {required: true}
+}
+
+exports.studentUpdateSchema = studentUpdateSchema
 exports.courseSchema = courseSchema
 
 /*
@@ -95,6 +104,9 @@ exports.deleteCourseById = async function deleteCourseById(id) {
 	return result.deletedCount > 0;
 }
 
+/*
+ * Get a page when the user requests to see course list
+ */
 exports.getCoursePage = async function getCoursePage(page) {
 	// Open up the db
 	const db = getDbReference();
@@ -125,6 +137,9 @@ exports.getCoursePage = async function getCoursePage(page) {
 	};	
 }
 
+/*
+ * Lists the userId's of students taking a course
+ */
 exports.getCourseStudents = async function getCourseStudents(id) {
 	// Open up the db
 	const db = getDbReference();
@@ -154,6 +169,9 @@ exports.getCourseStudents = async function getCourseStudents(id) {
 	return courseStudents[0].students
 }
 
+/*
+ * Lists the assignments in a given course
+ */
 exports.getCourseAssignments = async function getCourseAssignments(id) {
 	// Open up the db
 	const db = getDbReference();
@@ -164,7 +182,7 @@ exports.getCourseAssignments = async function getCourseAssignments(id) {
 		return null
 	}
 
-	// Find the
+	// Find the course
 	const course = await collection.aggregate([
 		{ $match: { _id: new ObjectId(id) } },
 		{
@@ -177,5 +195,33 @@ exports.getCourseAssignments = async function getCourseAssignments(id) {
 		}
 	]).toArray()
 
-	return course[0]
+	return course[0].assignments
+}
+
+/*
+ * Updates student enrollments in a course
+ */
+exports.updateCourseStudents = async function updateCourseStudents(id, studentArr) {
+	// Open up the db
+	const db = getDbReference();
+	const collection = db.collection('courses');
+
+	// Without this if someone enters a wrong id thats less chars it crashes..
+	if (id.length < 24) {
+		return null
+	}
+
+	// Delete students from existing course
+	const remResult = await collection.updateOne(
+		{ _id: new ObjectId(id ) },
+		{ $pull: { students: { $in: studentArr.remove}}}
+	)
+
+	// Add student arr to existing course
+	const addResult = await collection.updateOne(
+		{ _id: new ObjectId(id) },
+		{ $push: { students: { $each: studentArr.add }} }
+	)
+
+	return (remResult.matchedCount > 0 && addResult.matchedCount > 0)
 }
