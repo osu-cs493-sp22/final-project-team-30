@@ -130,8 +130,9 @@ Garett Goodlake
 **GitHub:** pyrothei
 
 **Responsible For:**
-
-Endpoint Implementation
+- Course Entity Endpoints
+- Assignment Entity
+- Course Roster Download
 
 Benjiman Walsh
 --------------
@@ -142,11 +143,9 @@ Benjiman Walsh
 
 **Responsible For: **
 
-Repository Maintenance
-
-Docker and Docker Compose
-
-Testing/Demo Workflow
+- Docker and Docker Compose
+- Testing/Demo Workflow
+- Rate Limiting
 
 Timur Ermoshkin
 ---------------
@@ -157,7 +156,10 @@ Timur Ermoshkin
 
 **Responsible For:**
 
-Endpoint Implementation
+- Set up Basic API server and Directory Structure
+- Pagination
+- Example Data
+
 
 Eric Hoang
 ----------
@@ -168,4 +170,6 @@ Eric Hoang
 
 **Responsible For:**
 
-Endpoint Implementation
+- User Entity
+- User authentication
+- Submission entity
