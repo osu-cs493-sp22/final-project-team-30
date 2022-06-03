@@ -2,6 +2,34 @@
 
 CS 493 Final Project - Team 30
 
+## Actions and Endpoints
+
+Course roster download
+
+-   CSV format
+
+-   GET /courses/{id}/roster
+
+Assignment submission creation
+
+-   POST /assignments/{id}/submissions
+
+-   GET /assignments/{id}/submissions
+
+User data fetching
+
+-   GET /users/{id}
+
+Course information fetching
+
+-   GET /courses
+
+-   GET /courses/{id}
+
+-   GET /courses/{id}/students
+
+-   GET /courses/{id}/assignments
+
 ## Data Schema
 
 -   Users
