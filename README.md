@@ -1,4 +1,82 @@
-# CS 493 Final Project - Team 30
+# Tarpaulin API
+
+CS 493 Final Project - Team 30
+
+## Actions and Endpoints
+
+Course roster download
+
+-   CSV format
+
+-   GET /courses/{id}/roster
+
+Assignment submission creation
+
+-   POST /assignments/{id}/submissions
+
+-   GET /assignments/{id}/submissions
+
+User data fetching
+
+-   GET /users/{id}
+
+Course information fetching
+
+-   GET /courses
+
+-   GET /courses/{id}
+
+-   GET /courses/{id}/students
+
+-   GET /courses/{id}/assignments
+
+## Data Schema
+
+-   Users
+
+    -   ID
+
+    -   name
+
+    -   role
+
+    -   email
+
+-   Courses
+
+    -   subject
+
+    -   code
+
+    -   Section
+
+    -   Name
+
+    -   description
+
+    -   teacher
+
+    -   students
+
+-   Assignments
+
+    -   id
+
+    -   Due
+
+    -   Name
+
+    -   description
+
+    -   courseID
+
+-   Submissions
+
+    -   studentID
+
+    -   assignmentID
+
+    -   Time submitted
 
 ## Docker Compose 
 
@@ -41,3 +119,57 @@ $ git push -u origin documentation
 ```
 
 After this, or whenever the changes are ready to be merged a [pull request](https://github.com/osu-cs493-sp22/final-project-team-30/pulls) can be made on the Github repository page. If it is merged into the main branch and no more changes are needed, the branch can be [deleted](https://github.com/osu-cs493-sp22/final-project-team-30/branches) through Github (and locally).
+
+## Team Members
+
+Garett Goodlake
+---------------
+
+**Email:** goodlakg\@oregonstate.edu
+
+**GitHub:** pyrothei
+
+**Responsible For:**
+- Course Entity Endpoints
+- Assignment Entity
+- Course Roster Download
+
+Benjiman Walsh
+--------------
+
+**Email:** walshb\@oregonstate.edu
+
+**GitHub:** walshb421
+
+**Responsible For: **
+
+- Docker and Docker Compose
+- Testing/Demo Workflow
+- Rate Limiting
+
+Timur Ermoshkin
+---------------
+
+**Email: ermoshkt\@oregonstate.edu**
+
+**GitHub:** ermoshkt
+
+**Responsible For:**
+
+- Set up Basic API server and Directory Structure
+- Pagination
+- Example Data
+
+
+Eric Hoang
+----------
+
+**Email:** hoanger\@oregonstate.edu
+
+**GitHub:** hoanger9
+
+**Responsible For:**
+
+- User Entity
+- User authentication
+- Submission entity
