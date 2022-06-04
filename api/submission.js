@@ -22,7 +22,7 @@ router.get('/:id', optionalAuthentication, requireAuthentication, async function
 	}
 })
 
-router.patch('/:id', optionalAuthentication, requireAuthentication, async function (req, res, next) {
+router.put('/:id', optionalAuthentication, requireAuthentication, async function (req, res, next) {
 	const submission = await getSubmissionById(req.params.id)
 
 	if (submission) {
