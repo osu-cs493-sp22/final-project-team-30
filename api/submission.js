@@ -1,7 +1,6 @@
 const router = require('express').Router()
 
-const { validateAgainstSchema } = require('../lib/validation')
-const { submissionSchema, insertNewSubmission, getSubmissionById, updateSubmissionGrade } = require('../models/submission')
+const { getSubmissionById, updateSubmissionGrade } = require('../models/submission')
 const { requireAuthentication, optionalAuthentication } = require('../lib/auth')
 
 exports.router = router
@@ -22,7 +21,7 @@ router.get('/:id', optionalAuthentication, requireAuthentication, async function
 	}
 })
 
-router.put('/:id', optionalAuthentication, requireAuthentication, async function (req, res, next) {
+router.patch('/:id', optionalAuthentication, requireAuthentication, async function (req, res, next) {
 	const submission = await getSubmissionById(req.params.id)
 
 	if (submission) {
@@ -31,7 +30,7 @@ router.put('/:id', optionalAuthentication, requireAuthentication, async function
 				error: "The request was not made by an authenticated User"
 			})
 		} else {
-			if (validateAgainstSchema(req.body, submissionSchema) && req.body.grade) {
+			if (req.body && req.body.submissionId && req.body.grade) {
 				const updateSuccessful = await updateSubmissionGrade(req.params.id, req.body.grade)
 				if (updateSuccessful) {
 					res.status(204).send();

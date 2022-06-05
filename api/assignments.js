@@ -15,13 +15,13 @@ const {
 
 const {
 	submissionSchema,
-	insertNewSubmission,
-	getAssignmentSubmissions
+	getAssignmentSubmissions,
+	saveSubmissionFile,
+	updateSubmissionFileUrl
 } = require('../models/submission');
 
-const {
-	getCourseStudents
-} = require('../models/course');
+const {	getCourseStudents } = require('../models/course');
+const {	fileTypes } = require('../lib/multer')
 /*
  * Route to post a new assignment
  */
@@ -94,14 +94,37 @@ router.post('/:assignmentId/submissions', optionalAuthentication, requireAuthent
 				error: "The request was not made by an authenticated User"
 			})
 		} else {
-			if (validateAgainstSchema(req.body, submissionSchema)) {
-				const id = await insertNewSubmission(req.body)
-				res.status(201).json({
-					id: id,
-					links: {
-						submission: '/submission/' + id
+			if (req.file && validateAgainstSchema(req.body, submissionSchema)) {
+				try {
+					// const submissionId = await insertNewSubmission(req.body)
+					// Create Timestamp
+					const newTimestamp = new Date(Date.now())
+
+					const submission = {
+						assignmentId: req.body.assignmentId,
+						submissionId: req.body.submissionId,
+						timestamp: newTimestamp.toISOString(),
+						filename: req.file.filename,
+						mimetype: req.file.mimetype,
+						path: req.file.path
 					}
-				})
+
+					// Save file and contents of submission
+					const id = await saveSubmissionFile(submission)
+					const url = `/media/submission/${id}.${fileTypes[req.file.mimetype]}`
+					
+					// Change the url of submission to download in future. 
+					await updateSubmissionFileUrl(id, url)
+
+					res.status(201).json({
+						id: id
+					})
+				} catch (err) {
+					console.error(err)
+					res.status(500).send({
+					error: "Error inserting photo into DB.  Please try again later."
+					})
+				}
 			} else {
 				res.status(400).json({
 					error: "Request body is not a valid submission object"
