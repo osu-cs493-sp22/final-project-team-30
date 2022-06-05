@@ -96,13 +96,12 @@ router.post('/:assignmentId/submissions', optionalAuthentication, requireAuthent
 		} else {
 			if (req.file && validateAgainstSchema(req.body, submissionSchema)) {
 				try {
-					// const submissionId = await insertNewSubmission(req.body)
 					// Create Timestamp
 					const newTimestamp = new Date(Date.now())
 
 					const submission = {
 						assignmentId: req.body.assignmentId,
-						submissionId: req.body.submissionId,
+						studentId: req.body.studentId,
 						timestamp: newTimestamp.toISOString(),
 						filename: req.file.filename,
 						mimetype: req.file.mimetype,

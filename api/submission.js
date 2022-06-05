@@ -9,7 +9,7 @@ router.get('/:id', optionalAuthentication, requireAuthentication, async function
 	const submission = await getSubmissionById(req.params.id)
 
 	if (submission) {
-		if (req.user.id != submission.studentId || req.user.role != "admin") {
+		if (req.user.id != submission.metadata.studentId || req.user.role != "admin") {
 			res.status(403).send({
 				error: "The request was not made by an authenticated User"
 			})
