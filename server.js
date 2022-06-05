@@ -32,8 +32,12 @@ app.use(express.json())
   });
 
 
-connectToRedis(connectToDb( async () => {
-  app.listen(port, function() {
-    console.log("== Server is running on port", port)
-  })
-}))
+connectToRedis( () => {
+  console.log("== Server connected to Redis ")
+  connectToDb( async () => {
+     console.log("== Server connected to MongoDB ")
+     app.listen(port, function() {
+        console.log("== Server is running on port", port)
+     })
+  }) 
+})
