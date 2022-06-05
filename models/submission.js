@@ -106,8 +106,10 @@ exports.saveSubmissionFile = function (submission) {
         const db = getDbReference()
         const bucket = new GridFSBucket(db, { bucketName: 'submission' })
         const metadata = {
+            assignmentId: submission.assignmentId,
             submissionId: submission.submissionId,
-            mimetype: submission.mimetype
+            timestamp: submission.timestamp,
+            mimetype: submission.mimetype 
         }
         const uploadStream = bucket.openUploadStream(submission.filename, {
             metadata: metadata
