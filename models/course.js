@@ -51,6 +51,10 @@ exports.getCourseById = async function getCourseById(id) {
 	const db = getDbReference();
 	const collection = db.collection('courses');
 
+	if (!ObjectId.isValid(id)) {
+        return null
+	}
+
 	// Search the collection for an course matching the ID
 	const course = await collection.aggregate([
 		{ $match: { _id: new ObjectId(id) } },
@@ -66,6 +70,10 @@ exports.updateCourseById = async function updateCourse(id, course) {
 	// Open up the db
 	const db = getDbReference();
 	const collection = db.collection('courses');
+
+	if (!ObjectId.isValid(id)) {
+        return null
+	}
 
 	const newCourseValues = {
 		subject: course.subject,
@@ -94,6 +102,10 @@ exports.deleteCourseById = async function deleteCourseById(id) {
 	// Open up the db
 	const db = getDbReference();
 	const collection = db.collection('courses');
+
+    if (!ObjectId.isValid(id)) {
+        return null
+	}
 	
 	// Delete the corresponding course
 	const result = await collection.deleteOne({
@@ -145,9 +157,8 @@ exports.getCourseStudents = async function getCourseStudents(id) {
 	const db = getDbReference();
 	const collection = db.collection('courses');
 
-	// Without this if someone enters a wrong id thats less chars it crashes..
-	if (id.length < 24) {
-		return null
+    if (!ObjectId.isValid(id)) {
+        return null
 	}
 
 	// Find the
@@ -177,9 +188,8 @@ exports.getCourseAssignments = async function getCourseAssignments(id) {
 	const db = getDbReference();
 	const collection = db.collection('courses');	
 
-	// Without this if someone enters a wrong id thats less chars it crashes..
-	if (id.length < 24) {
-		return null
+    if (!ObjectId.isValid(id)) {
+        return null
 	}
 
 	// Find the course
@@ -206,11 +216,9 @@ exports.updateCourseStudents = async function updateCourseStudents(id, studentAr
 	const db = getDbReference();
 	const collection = db.collection('courses');
 
-	// Without this if someone enters a wrong id thats less chars it crashes..
-	if (id.length < 24) {
-		return null
+    if (!ObjectId.isValid(id)) {
+        return null
 	}
-
 	// Delete students from existing course
 	const remResult = await collection.updateOne(
 		{ _id: new ObjectId(id ) },
