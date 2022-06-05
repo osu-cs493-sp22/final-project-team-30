@@ -141,7 +141,7 @@ Benjiman Walsh
 
 **GitHub:** walshb421
 
-**Responsible For: **
+**Responsible For:**
 
 - Docker and Docker Compose
 - Testing/Demo Workflow
