@@ -122,8 +122,7 @@ After this, or whenever the changes are ready to be merged a [pull request](http
 
 ## Team Members
 
-Garett Goodlake
----------------
+### Garett Goodlake
 
 **Email:** goodlakg\@oregonstate.edu
 
@@ -134,8 +133,7 @@ Garett Goodlake
 - Assignment Entity
 - Course Roster Download
 
-Benjiman Walsh
---------------
+### Benjiman Walsh
 
 **Email:** walshb\@oregonstate.edu
 
@@ -147,8 +145,7 @@ Benjiman Walsh
 - Testing/Demo Workflow
 - Rate Limiting
 
-Timur Ermoshkin
----------------
+### Timur Ermoshkin
 
 **Email: ermoshkt\@oregonstate.edu**
 
@@ -161,8 +158,7 @@ Timur Ermoshkin
 - Example Data
 
 
-Eric Hoang
-----------
+### Eric Hoang
 
 **Email:** hoanger\@oregonstate.edu
 
