@@ -1,7 +1,5 @@
 const router = require('express').Router();
-const multer = require('multer');
 const crypto = require('crypto')
-const express = require('express')
 const fs = require('fs')
 
 const { validateAgainstSchema, extractValidFields } = require('../lib/validation');
@@ -163,8 +161,15 @@ router.patch('/:id/students', async function(req, res, next) {
 router.get('/:id/roster', async function(req, res, next) {
 	students = await getCourseStudents(req.params.id)
 	if (students) {
+		/* Prepare csv file */
 		csvFile = await studentToCsv(students)
-		path = `${__dirname}/uploads/studentRoster.csv`
+		randomStuff = crypto.pseudoRandomBytes(16).toString('hex')
+		path = `${__dirname}/downloads/studentRoster` + randomStuff + `.csv`
+
+		/* Create dir if doesnt already exists */
+		if (!fs.existsSync(`${__dirname}/downloads`)){
+			fs.mkdirSync(`${__dirname}/downloads`)
+		}
 
 		/* Write the file to the server so we can download it as a csv*/
 		fs.writeFile(path, csvFile, 'utf8', function(err) {
