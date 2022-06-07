@@ -264,7 +264,10 @@ exports.studentToCsv = async function studentToCsv(students) {
 	}
 
 	/* Turn data into csv */
-	let csv = studentInfo.map(o => Object.values(o).join(',')).join('\n');
+	let csv = ''
+	let data = studentInfo.map(o => Object.values(o).join(',')).join('\n');
+
+	csv += data
 	
 	return csv
 }
