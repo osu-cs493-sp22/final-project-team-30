@@ -1,4 +1,5 @@
 const { ObjectID, GridFSBucket, ObjectId } = require('mongodb')
+const fs = require('fs')
 
 const { getDbReference } = require('../lib/mongo');
 const { extractValidFields } = require('../lib/validation');
@@ -60,6 +61,8 @@ exports.getCourseById = async function getCourseById(id) {
 		{ $match: { _id: new ObjectId(id) } },
 	]).toArray()
 
+	delete course[0].students
+
 	return course[0]
 }
 
@@ -83,6 +86,10 @@ exports.updateCourseById = async function updateCourse(id, course) {
 		description: course.description,
 		teacher: course.teacher,
 		students: course.students
+	}
+
+	if (newCourseValues.students != course.students) {
+		newCourseValues.students == course.students
 	}
 	
 	// Update
@@ -139,6 +146,8 @@ exports.getCoursePage = async function getCoursePage(page) {
 		.skip(offset)
 		.limit(pageSize)
 		.toArray();
+
+	delete results[0].students
 
 	return {
 		courses: results,
@@ -232,4 +241,33 @@ exports.updateCourseStudents = async function updateCourseStudents(id, studentAr
 	)
 
 	return (remResult.matchedCount > 0 && addResult.matchedCount > 0)
+}
+
+/*
+ * Takes student numbers and turns into csv about them
+ */
+exports.studentToCsv = async function studentToCsv(students) {
+	const db = getDbReference()
+	const collection = db.collection('users')
+
+	/* Convert studentsId to objectId */
+	for (let i = 0; i < students.length; i++) {
+		students[i] = new ObjectId(students[i])
+	}
+
+	/* Look through collection where id's match */
+	const studentInfo = await collection.find({ _id: { $in: students } }).toArray()
+	
+	for (let i = 0; i < studentInfo.length; i++) {
+		delete studentInfo[i].password
+		delete studentInfo[i].role
+	}
+
+	/* Turn data into csv */
+	let csv = '';
+	let values = studentInfo.map(o => Object.values(o).join(',')).join('\n');
+	
+	csv += values;
+	
+	return csv
 }

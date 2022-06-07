@@ -1,4 +1,8 @@
 const router = require('express').Router();
+const multer = require('multer');
+const crypto = require('crypto')
+const express = require('express')
+const fs = require('fs')
 
 const { validateAgainstSchema, extractValidFields } = require('../lib/validation');
 
@@ -14,7 +18,8 @@ const {
 	getCourseStudents,
 	getCourseAssignments,
 	updateCourseStudents,
-	studentUpdateSchema
+	studentUpdateSchema,
+	studentToCsv
 } = require('../models/course');
 
 /*
@@ -109,44 +114,6 @@ router.delete('/:id', async function (req, res, next) {
 });
 
 /*
- * Route to get a page for a course (old)
- */
-  
- /*
-router.get('/', async function(req, res) {
-	// Get page based on results
-	const results = await getCoursePage(parseInt(req.query.page) || 1);
-	coursePage = results.courses
-	currPage = results.page
-	lastPage = results.lastPage
-	numPerPage = results.pageSize
-	totalCount = results.totalCount
-
-	
-	// Generate HATEOAS links for surrounding pages.
-	const links = {};
-	if (currPage < lastPage) {
-		links.nextPage = `/courses?page=${currPage + 1}`;
-		links.lastPage = `/courses?page=${lastPage}`;
-	}
-	if (currPage > 1) {
-		links.prevPage = `/courses?page=${currPage - 1}`;
-		links.firstPage = '/courses?page=1';
-	}
-
-	// Send back response
-	res.status(200).json({
-		courses: coursePage,
-		pageNumber: currPage,
-		totalPages: lastPage,
-		pageSize: numPerPage,
-		totalCount: totalCount,
-		links: links
-	  });
-})
-*/
-
-/*
  * Route to get all students enrolled in a course (Currently not connectd to users)
  */
 router.get('/:id/students', async function(req, res, next) {
@@ -164,7 +131,9 @@ router.get('/:id/students', async function(req, res, next) {
 router.get('/:id/assignments', async function(req, res, next) {
 	const assignments = await getCourseAssignments(req.params.id)
 	if (assignments) {
-		res.status(200).send(assignments)
+		res.status(200).json({
+			assignments: assignments
+		})
 	} else {
 		next()
 	}
@@ -185,5 +154,32 @@ router.patch('/:id/students', async function(req, res, next) {
 		res.status(400).json({
 			err: "The request body was either not present or did not contain proper fields"
 		})
+	}
+})
+
+/*
+ * Route to download a CSV roster for a course
+ */
+router.get('/:id/roster', async function(req, res, next) {
+	students = await getCourseStudents(req.params.id)
+	if (students) {
+		csvFile = await studentToCsv(students)
+		path = `${__dirname}/uploads/studentRoster.csv`
+
+		/* Write the file to the server so we can download it as a csv*/
+		fs.writeFile(path, csvFile, 'utf8', function(err) {
+			if (err) {
+				res.status(500).json({
+					err: "There was a problem writing the csv file",
+					errorMessage: err
+				})
+			} else {
+				/* Send the data along with the file as the attachment */
+				res.attachment(path)
+				res.status(200).send(csvFile)				
+			}
+		})
+	} else {
+		next()
 	}
 })
