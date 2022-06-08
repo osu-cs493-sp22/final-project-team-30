@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "ed0bcecd-eacc-4966-b3df-89356d2cbea1",
+		"_postman_id": "64911d38-5757-4986-8e08-1a4890dc3232",
 		"name": "Tarpaulin API Tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20359577"
+		"_exporter_id": "15803747"
 	},
 	"item": [
 		{
@@ -123,6 +123,43 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Assignment Submissions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{teacherToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/assignments/:assignmentId/submissions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"assignments",
+								":assignmentId",
+								"submissions"
+							],
+							"variable": [
+								{
+									"key": "assignmentId",
+									"value": "629fdd41852f57fc5e1bd35e"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -136,7 +173,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"subject\": \"cs\",\r\n    \"courseCode\": 493,\r\n    \"section\": 1,\r\n    \"name\": \"Cloud Application Development\",\r\n    \"description\": \"servers n databases n lots of dat stuff\",\r\n    \"teacher\": \"Rob Hess\",\r\n    \"students\": [\r\n        453,\r\n        741,\r\n        102\r\n    ]\r\n}",
+							"raw": "{\r\n    \"subject\": \"cs\",\r\n    \"courseCode\": 493,\r\n    \"section\": 1,\r\n    \"name\": \"Cloud Application Development\",\r\n    \"description\": \"servers n databases n lots of dat stuff\",\r\n    \"teacher\": \"629fdc7a07233ca3ce3c54f9\",\r\n    \"students\": [\r\n        \"629fdd0c852f57fc5e1bd35c\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -356,6 +393,350 @@
 								}
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Endpoints",
+			"item": [
+				{
+					"name": "Student",
+					"item": [
+						{
+							"name": "Create Student",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mjk5NjA0ZWM2M2E4MDllYjU1OGYwMTIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTY1NDIyNTc2NCwiZXhwIjoxNjU0MzEyMTY0fQ.5i4FaL1PgQq1jg4qFEjKwlFJdAEBs3fFrkm7BOglX1w",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"student\",\r\n\t\"email\": \"student@gmail.com\",\r\n\t\"password\": \"hunter2\", \r\n\t\"role\": \"student\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login Student",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"student@gmail.com\",\r\n\t\"password\": \"hunter2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Login Admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n\t\"password\": \"hunter2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Admin",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mjk5NjA0ZWM2M2E4MDllYjU1OGYwMTIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTY1NDIyNTc2NCwiZXhwIjoxNjU0MzEyMTY0fQ.5i4FaL1PgQq1jg4qFEjKwlFJdAEBs3fFrkm7BOglX1w",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"student\",\r\n\t\"email\": \"student@gmail.com\",\r\n\t\"password\": \"hunter2\", \r\n\t\"role\": \"student\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Teacher",
+					"item": [
+						{
+							"name": "Login Teacher",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n\t\"password\": \"hunter2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Teacher",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mjk5NjA0ZWM2M2E4MDllYjU1OGYwMTIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTY1NDIyNTc2NCwiZXhwIjoxNjU0MzEyMTY0fQ.5i4FaL1PgQq1jg4qFEjKwlFJdAEBs3fFrkm7BOglX1w",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"teacher\",\r\n\t\"email\": \"teacher@gmail.com\",\r\n\t\"password\": \"hunter2\", \r\n\t\"role\": \"teacher\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Fetch User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mjk5N2E1ODBkYTU5YTk2YWZhYTFiNDMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2NTQ2NDMzNDIsImV4cCI6MTY1NDcyOTc0Mn0.6tmGsNtETMK8icZQBppIn1vIzBoNO2xvUr13ccKYtoc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"email\": \"erichoang@gmail.com\",\r\n\t\"password\": \"hunter2\", \r\n\t\"name\": \"Eric Hoang\",\r\n\t\"role\": \"student\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/users/62997a580da59a96afaa1b43",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"62997a580da59a96afaa1b43"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Submission Endpoints",
+			"item": [
+				{
+					"name": "Create Submission",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{studentToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "assignmentId",
+									"value": "629fdd41852f57fc5e1bd35e",
+									"type": "text"
+								},
+								{
+									"key": "studentId",
+									"value": "629fdd0c852f57fc5e1bd35c",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/S:/OSU/Spring2022/CS493/final-project-team-30/test.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/assignments/:assignmentId/submissions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"assignments",
+								":assignmentId",
+								"submissions"
+							],
+							"variable": [
+								{
+									"key": "assignmentId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Submission",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Update Submission Grade",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}

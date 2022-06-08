@@ -1,6 +1,7 @@
-const { ObjectId } = require('mongodb')
+const { ObjectId, GridFSBucket } = require('mongodb')
 
 const { getDbReference } = require('../lib/mongo');
+const fs = require('fs')
 
 /*
  * Schema describing required/optional fields for a submission object
@@ -111,6 +112,7 @@ exports.saveSubmissionFile = function (submission) {
             timestamp: submission.timestamp,
             mimetype: submission.mimetype 
         }
+
         const uploadStream = bucket.openUploadStream(submission.filename, {
             metadata: metadata
         })
@@ -136,8 +138,8 @@ exports.getSubmissionById = async function (id) {
         return null
     } else {
         const result = await bucket
-            .findOne({ _id: new ObjectId(id) })
-        return result
+            .find({ _id: new ObjectId(id) }).toArray();
+        return result[0]
     }
 }
 
@@ -146,14 +148,14 @@ exports.getSubmissionById = async function (id) {
  */
 exports.getAssignmentSubmissions = async function (id) {
     const db = getDbReference()
-    const bucket = new GridFSBucket(db, { bucketName: 'submission' })
+    const collection = db.collection('submission.files')
     if (!ObjectId.isValid(id)) {
         return null
     } else {
-        const result = await bucket
-            .find({ assignmentId: new ObjectId(id) })
-			.toArray()
-        return result[0]
+        const result = await collection
+            .find({ "metadata.assignmentId": id })
+            .toArray()
+        return result
     }
 }
 
@@ -186,7 +188,7 @@ exports.updateSubmissionGrade = async function (id, grade) {
     } else {
         const result = await collection
             .updateOne(
-				{ _id: new ObjectId },
+				{ _id: new ObjectId(id) },
 				{ $set: { "metadata.grade": grade } }
             )
         return result.matchedCount > 0

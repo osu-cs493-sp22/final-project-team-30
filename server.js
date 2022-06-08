@@ -16,7 +16,7 @@ app.use(morgan('dev'))
 app.use(express.json())
 
 connectToDb(async () => {
-  //exports.upload = require("./lib/multer").initializeMulter()
+  // exports.upload = require("./lib/multer").initializeMulter()
   app.use('/', api)
 
   app.use('*', function (req, res, next) {

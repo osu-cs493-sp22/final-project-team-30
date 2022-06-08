@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const crypto = require("crypto")
+const multer = require("multer")
 
 const { validateAgainstSchema, extractValidFields } = require('../lib/validation');
 const { requireAuthentication, optionalAuthentication } = require('../lib/auth')
@@ -21,7 +23,27 @@ const {
 } = require('../models/submission');
 
 const {	getCourseStudents } = require('../models/course');
-const {	fileTypes } = require('../lib/multer')
+
+const fileTypes = {
+	'application/pdf': 'pdf',
+	'image/jpeg': 'jpg',
+	'image/png': 'png'
+  }
+  
+  const upload = multer({
+	  storage: multer.diskStorage({
+	  destination: `${__dirname}/../uploads`,
+	  filename: function(req, file, callback) {
+		const ext = fileTypes[file.mimetype]
+		const filename = crypto.pseudoRandomBytes(16).toString('hex')
+		callback(null,`${filename}.${ext}`)
+	  }
+	}),
+	fileFilter: function (req, file, callback) {
+	  callback(null, !!fileTypes[file.mimetype])
+	}
+  })
+
 /*
  * Route to post a new assignment
  */
@@ -83,7 +105,7 @@ router.delete('/:assignmentId', async function (req, res, next) {
 /*
  * Route to post a new submission
  */
-router.post('/:assignmentId/submissions', optionalAuthentication, requireAuthentication, async function (req, res) {
+router.post('/:assignmentId/submissions', optionalAuthentication, requireAuthentication, upload.single('file'), async function (req, res) {
 	const assignment = await getAssignmentById(req.params.assignmentId)
 	const studentsInCourse= await getCourseStudents(assignment.courseId)
 
@@ -94,6 +116,8 @@ router.post('/:assignmentId/submissions', optionalAuthentication, requireAuthent
 				error: "The request was not made by an authenticated User"
 			})
 		} else {
+			console.log(req.file);
+			console.log(req.body.assignmentId);
 			if (req.file && validateAgainstSchema(req.body, submissionSchema)) {
 				try {
 					// Create Timestamp
@@ -148,6 +172,8 @@ router.get('/:assignmentId/submissions', optionalAuthentication, requireAuthenti
 		const assignment = await getAssignmentById(assignmentId)
 		if (assignment) {
 			const submissions = await getAssignmentSubmissions(assignmentId)
+			console.log(assignmentId);
+			console.log(submissions);
 
 			let page = parseInt(req.query.page) || 1;
 			const numPerPage = 10;
@@ -157,7 +183,7 @@ router.get('/:assignmentId/submissions', optionalAuthentication, requireAuthenti
 		
 			const start = (page - 1) * numPerPage;
 			const end = start + numPerPage;
-			const pageSubmissions = submissions.slice(start, end);
+			const pageSubmissions = submissions.slice(start, end)
 		
 			// Generate HATEOAS links for surrounding pages.
 			const links = {};
