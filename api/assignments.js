@@ -51,6 +51,11 @@ router.post('/', optionalAuthentication, requireAuthentication, async function (
 	//check to make sure valid body before checking if auth user to make sure courseId is in body
 	if (validateAgainstSchema(req.body, assignmentSchema)) {
 		const course = await getCourseById(req.body.courseId)
+		if (!course) {
+		   res.status(400).json({
+		      error: "Invalid course ID"
+		   })
+		}
 
 		// Check if admin or instructor
 		if ( req.user.role == 'admin' || req.user.id.toString() == course.instructorId  ) {
@@ -205,7 +210,7 @@ router.post('/:assignmentId/submissions', optionalAuthentication, requireAuthent
 /*
  * Route to get submissions
  */
-router.get('/:assignmentId/submissions', optionalAuthentication, requireAuthentication, async function (req, res) {
+router.get('/:assignmentId/submissions', optionalAuthentication, requireAuthentication, async function (req, res, next) {
 	const assignmentId = req.params.assignmentId
 	const assignment = await getAssignmentById(assignmentId)
 	
