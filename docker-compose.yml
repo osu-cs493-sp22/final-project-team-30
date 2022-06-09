@@ -27,6 +27,6 @@ services:
          REDIS_PORT: ${REDIS_PORT} 
       depends_on:
          - db
-         - redis
+         - redis-server
       restart: on-failure
       command: bash -c "npm install && npm install -g --no-save nodemon && npm run dev"
