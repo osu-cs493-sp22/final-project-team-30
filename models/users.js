@@ -50,12 +50,12 @@ exports.getUserById = async function (id) {
         let results = null
         let courses = null
 
-        if (role == "teacher") {
+        if (role == "instructor") {
             results = await collection.find({ _id: new ObjectId(id) })
                 .project({ password: 0 })
                 .toArray()
             courses = await courseCollection
-                .find( { teacher: id }, {projection: {_id: 1}})
+                .find( { instructorId: id }, {projection: {_id: 1}})
                 .toArray()
             results[0]["courses"] = courses
             return results[0]

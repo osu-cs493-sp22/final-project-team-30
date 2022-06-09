@@ -1,0 +1,812 @@
+{
+	"info": {
+		"_postman_id": "64911d38-5757-4986-8e08-1a4890dc3232",
+		"name": "Tarpaulin API Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15803747"
+	},
+	"item": [
+		{
+			"name": "Assignment Endpoints",
+			"item": [
+				{
+					"name": "Create Assignment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dueDate\": \"6-2-2000\",\r\n    \"courseId\": \"1\",\r\n    \"title\": \"Test Assignment\",\r\n    \"description\": \"cool test assignment\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/assignments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"assignments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Assignment By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/assignments/:assignmentId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"assignments",
+								":assignmentId"
+							],
+							"variable": [
+								{
+									"key": "assignmentId",
+									"value": "629833501fd23c701898b815"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Assignment By ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dueDate\": \"6-2-2000\",\r\n    \"courseId\": \"2\",\r\n    \"title\": \"Updated Test Assignment\",\r\n    \"description\": \"cool test assignment\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/assignments/:assignmentId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"assignments",
+								":assignmentId"
+							],
+							"variable": [
+								{
+									"key": "assignmentId",
+									"value": "62983521a84f0f2408e8cd90"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Assignment By ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/assignments/:assignmentId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"assignments",
+								":assignmentId"
+							],
+							"variable": [
+								{
+									"key": "assignmentId",
+									"value": "62983521a84f0f2408e8cd90"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Assignment Submissions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{teacherToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/assignments/:assignmentId/submissions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"assignments",
+								":assignmentId",
+								"submissions"
+							],
+							"variable": [
+								{
+									"key": "assignmentId",
+									"value": "629fdd41852f57fc5e1bd35e"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Course Endpoints",
+			"item": [
+				{
+					"name": "Create Course",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"subject\": \"cs\",\r\n    \"courseCode\": 123,\r\n    \"section\": 1,\r\n    \"name\": \"Some other course\",\r\n    \"description\": \"servers n databases n lots of dat stuff\",\r\n    \"instructorId\": \"629fdc7a07233ca3ce3c54f9\",\r\n    \"students\": [\r\n        \"629fdd0c852f57fc5e1bd35c\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/courses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Course By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/courses/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"courses",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6298f0ef9613b662c82d83d6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Course By ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"subject\": \"cs\",\r\n    \"courseCode\": 493,\r\n    \"section\": 1,\r\n    \"name\": \"UPDATED Cloud Application Development\",\r\n    \"description\": \"servers n databases n lots of dat stuff\",\r\n    \"instructorId\": \"Rob Hess\",\r\n    \"students\": [\r\n        \"Ben Walsh\",\r\n        \"Garett Goodlake\",\r\n        \"Timmy\",\r\n        \"Eric Hoang\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/courses/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"courses",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Course By ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/courses/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"courses",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6298f0ef9613b662c82d83d6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get list of Courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/courses?page=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"courses"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Students By CourseID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/courses/:id/students",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"courses",
+								":id",
+								"students"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6298e7a34d76ad62"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Assignments For Course",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/courses/:id/assignments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"courses",
+								":id",
+								"assignments"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6298e7a34d76ad6286430e62"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Student Enrollment",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"add\": [\r\n        \"629fdd0c852f57fc5e1bd35c\"\r\n    ],\r\n    \"remove\": [\r\n        \r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/courses/:id/students",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"courses",
+								":id",
+								"students"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "62993192816d605ef11551"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Endpoints",
+			"item": [
+				{
+					"name": "Student",
+					"item": [
+						{
+							"name": "Create Student",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mjk5NjA0ZWM2M2E4MDllYjU1OGYwMTIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTY1NDIyNTc2NCwiZXhwIjoxNjU0MzEyMTY0fQ.5i4FaL1PgQq1jg4qFEjKwlFJdAEBs3fFrkm7BOglX1w",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"student\",\r\n\t\"email\": \"student@gmail.com\",\r\n\t\"password\": \"hunter2\", \r\n\t\"role\": \"student\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login Student",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"student@gmail.com\",\r\n\t\"password\": \"hunter2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fetch Student User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{studentToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/users/:userId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "629fdd0c852f57fc5e1bd35c"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Login Admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n\t\"password\": \"hunter2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Admin",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mjk5NjA0ZWM2M2E4MDllYjU1OGYwMTIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTY1NDIyNTc2NCwiZXhwIjoxNjU0MzEyMTY0fQ.5i4FaL1PgQq1jg4qFEjKwlFJdAEBs3fFrkm7BOglX1w",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"student\",\r\n\t\"email\": \"student@gmail.com\",\r\n\t\"password\": \"hunter2\", \r\n\t\"role\": \"student\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Teacher",
+					"item": [
+						{
+							"name": "Login Teacher",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n\t\"password\": \"hunter2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Teacher",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mjk5N2E1ODBkYTU5YTk2YWZhYTFiNDMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2NTQ2NDMzNDIsImV4cCI6MTY1NDcyOTc0Mn0.6tmGsNtETMK8icZQBppIn1vIzBoNO2xvUr13ccKYtoc",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"teacher\",\r\n\t\"email\": \"teacher@gmail.com\",\r\n\t\"password\": \"hunter2\", \r\n\t\"role\": \"instructor\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/users/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fetch Teacher User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{teacherToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/users/:userId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "629fdc7a07233ca3ce3c54f9"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete User By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/users/:userId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "62997aefca6e3ff4cde0cfb1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Submission Endpoints",
+			"item": [
+				{
+					"name": "Create Submission",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{studentToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "assignmentId",
+									"value": "629fdd41852f57fc5e1bd35e",
+									"type": "text"
+								},
+								{
+									"key": "studentId",
+									"value": "629fdd0c852f57fc5e1bd35c",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/S:/OSU/Spring2022/CS493/final-project-team-30/test.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/assignments/:assignmentId/submissions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"assignments",
+								":assignmentId",
+								"submissions"
+							],
+							"variable": [
+								{
+									"key": "assignmentId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Submission By Id",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Update Submission Grade",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
