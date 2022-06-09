@@ -33,13 +33,13 @@ CS 493 Final Project - Team 30
 // An object representing information about a Tarpaulin application user.
 {
   // Full name of the User.
-  name: string
+  name: string,
 
   // Email address for the User.  This is required to be unique among all Users.
-  email: string
+  email: string,
 
   // The User's plain-text password.  This is required when creating a new User and when logging in.
-  password: string
+  password: string,
 
   // Permission role of the User.  Can be either 'admin', 'instructor', or 'student'.
   role: string
@@ -52,19 +52,19 @@ CS 493 Final Project - Team 30
 // An object representing information about a specific course. 
 {
   // Short subject code.
-  subject: string
+  subject: string,
 
   // Course number.
-  number: string
+  number: string,
 
   // Course title.
-  title: string
+  title: string,
 
   // Academic term in which Course is offered.
-  term: string
+  term: string,
     
   // ID for Course instructor.  Exact type/format will depend on your implementation but will likely be either an integer or a string.  This ID must correspond to a User with the 'instructor' role. 
-  instructorId: integer | string
+  instructorId: string
 
 }
 ```
@@ -75,13 +75,13 @@ CS 493 Final Project - Team 30
 // An object representing information about a single assignment. 
 {
   // ID of the Course associated with the Assignment.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
-  courseId: integer | string
+  courseId: string,
   
   // Assignment description.
-  title: string
+  title: string,
 
   // Possible points for the Assignment.
-  points: integer
+  points: integer,
 
   // Date and time Assignment is due.  Should be in ISO 8601 format. 
   due: string
@@ -90,19 +90,20 @@ CS 493 Final Project - Team 30
 
 ###  Submissions
 
+'''
 // An object representing information about a single student submission for an Assignment.
 {
   // ID of the Assignment to which the Submission corresponds.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
-  assignmentId: string
+  assignmentId: string,
   
   // ID of the Student who created the submission.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
-  studentId:string
+  studentId: string,
 
   // Date and time Submission was made.  Should be in ISO 8601 format.
-  timestamp: string
+  timestamp: string,
     
   // The grade, in points, assigned to the student for this sumbission, if one is assigned.  Should not be accepted during submission creation, only via update. 
-  grade: number
+  grade: number,
     
   // When the Submission is being created, this will be the binary data contained in the submitted file.  When Submission information is being returned from the API, this will contain the URL from which the file can be downloaded.
   file: string
