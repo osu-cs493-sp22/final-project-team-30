@@ -39,6 +39,8 @@ exports.insertNewUser = async function insertNewUser(user) {
 exports.getUserById = async function (id) {
     const db = getDbReference()
     const collection = db.collection('users')
+    const courseCollection = db.collection('courses')
+
     if (!ObjectId.isValid(id)) {
         return null
     } else {
@@ -46,36 +48,25 @@ exports.getUserById = async function (id) {
             .findOne({ _id: new ObjectId(id) }, {projection: {password: 0}})
         const role = user.role
         let results = null
-        
+        let courses = null
+
         if (role == "instructor") {
-            results = await collection.aggregate([
-                { $match: { _id: new ObjectId(id) } },
-                {
-                    $lookup: {
-                        from: "courses",
-                        localField: "_id",
-                        foreignField: "instructor",
-                        pipeline: [{ $project: {_id: 1}}],
-                        as: "courses"
-                    },
-                    // $project: {"_id": "$_id"}
-                }
-            ]).toArray()
+            results = await collection.find({ _id: new ObjectId(id) })
+                .project({ password: 0 })
+                .toArray()
+            courses = await courseCollection
+                .find( { instructorId: id }, {projection: {_id: 1}})
+                .toArray()
+            results[0]["courses"] = courses
             return results[0]
         } else if (role == "student") {
-            results = await collection.aggregate([
-                { $match: { _id: new ObjectId(id) } },
-                {
-                    $lookup: {
-                        from: "courses",
-                        localField: "_id",
-                        foreignField: "_id",
-                        pipeline: [{ $project: {_id: 1}}],
-                        as: "courses"
-                    }
-                },
-                { $project: { password: 0 }}
-            ]).toArray()
+            results = await collection.find({ _id: new ObjectId(id) })
+                .project({ password: 0 })
+                .toArray()
+            courses = await courseCollection
+                .find( { students: id }, {projection: {_id: 1}})
+                .toArray()
+            results[0]["courses"] = courses
             return results[0]
         } else {
             return user

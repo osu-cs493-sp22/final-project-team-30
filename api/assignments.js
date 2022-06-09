@@ -53,7 +53,7 @@ router.post('/', optionalAuthentication, requireAuthentication, async function (
 		const course = await getCourseById(req.body.courseId)
 
 		// Check if admin or instructor
-		if ( ( req.user && req.user.role == 'admin' ) || ( req.user && req.user.id == course.instructorId ) ) {
+		if ( req.user.role == 'admin' || req.user.id.toString() == course.instructorId  ) {
 			const id = await insertNewAssignment(req.body)
 			res.status(201).json({
 				id: id,
@@ -93,18 +93,22 @@ router.put('/:assignmentId', optionalAuthentication, requireAuthentication, asyn
 	if (validateAgainstSchema(req.body, assignmentSchema)) {
 		const course = await getCourseById(req.body.courseId)
 
-		// Check if admin or instructor
-		if ( ( req.user && req.user.role == 'admin' ) || ( req.user && req.user.id == course.instructorId ) ) {
-			const updateSuccessful = await updateAssignmentById(req.params.assignmentId, req.body)
-			if (updateSuccessful) {
-				res.status(204).send();
+		if (course) {
+			// Check if admin or instructor
+			if ( req.user.role == 'admin' || req.user.id.toString() == course.instructorId ) {
+				const updateSuccessful = await updateAssignmentById(req.params.assignmentId, req.body)
+				if (updateSuccessful) {
+					res.status(204).send();
+				} else {
+					next();
+				}
 			} else {
-				next();
+				res.status(403).send({
+					error: "The request was not made by an authenticated User"
+				})
 			}
 		} else {
-			res.status(403).send({
-				error: "The request was not made by an authenticated User"
-			})
+			next()
 		}
 	} else {
 		res.status(400).send({
@@ -115,22 +119,26 @@ router.put('/:assignmentId', optionalAuthentication, requireAuthentication, asyn
 
 router.delete('/:assignmentId', optionalAuthentication, requireAuthentication, async function (req, res, next) {
 	const assignment = await getAssignmentById(req.params.assignmentId)
-	const course = await getCourseById(assignment.courseId)
-
+	
 	// check if assignment and course exists 
-	if (assignment && course) {
-		// Check if admin or instructor
-		if ( ( req.user && req.user.role == 'admin' ) || ( req.user && req.user.id == course.instructorId ) ) {
-			const deleteSuccessful = await deleteAssignmentById(req.params.assignmentId)
-			if (deleteSuccessful) {
-				res.status(204).end();
+	if (assignment) {
+		const course = await getCourseById(assignment.courseId)
+		if (course) {
+			// Check if admin or instructor
+			if ( req.user.role == 'admin' || req.user.id.toString() == course.instructorId ) {
+				const deleteSuccessful = await deleteAssignmentById(req.params.assignmentId)
+				if (deleteSuccessful) {
+					res.status(204).end();
+				} else {
+					next();
+				}
 			} else {
-				next();
+				res.status(403).send({
+					error: "The request was not made by an authenticated User"
+				})
 			}
 		} else {
-			res.status(403).send({
-				error: "The request was not made by an authenticated User"
-			})
+			next()
 		}
 	} else {
 		next()
@@ -200,48 +208,55 @@ router.post('/:assignmentId/submissions', optionalAuthentication, requireAuthent
 router.get('/:assignmentId/submissions', optionalAuthentication, requireAuthentication, async function (req, res) {
 	const assignmentId = req.params.assignmentId
 	const assignment = await getAssignmentById(assignmentId)
-	const course = await getCourseById(assignment.courseId)
 	
-	if (assignment && course) {
+	//Check if assignment exists
+	if (assignment) {
+		const course = await getCourseById(assignment.courseId)
+		
+		//Check if course exists
+		if (course) {
 
-		if ( ( req.user && req.user.role == "admin" ) || ( req.user && req.user.id == course.instructorId ) ) {
-			const submissions = await getAssignmentSubmissions(assignmentId)
-			console.log(assignmentId);
-			console.log(submissions);
-	
-			let page = parseInt(req.query.page) || 1;
-			const numPerPage = 10;
-			const lastPage = Math.ceil(submissions.length / numPerPage);
-			page = page > lastPage ? lastPage : page;
-			page = page < 1 ? 1 : page;
-	
-			const start = (page - 1) * numPerPage;
-			const end = start + numPerPage;
-			const pageSubmissions = submissions.slice(start, end)
-	
-			// Generate HATEOAS links for surrounding pages.
-			const links = {};
-			if (page < lastPage) {
-				links.nextPage = `/${assignmentId}/submissions?page=${page + 1}`;
-				links.lastPage = `/${assignmentId}/submissions?page=${lastPage}`;
+			if ( req.user.role == "admin" || req.user.id.toString() == course.instructorId ) {
+				const submissions = await getAssignmentSubmissions(assignmentId)
+				console.log(assignmentId);
+				console.log(submissions);
+		
+				let page = parseInt(req.query.page) || 1;
+				const numPerPage = 10;
+				const lastPage = Math.ceil(submissions.length / numPerPage);
+				page = page > lastPage ? lastPage : page;
+				page = page < 1 ? 1 : page;
+		
+				const start = (page - 1) * numPerPage;
+				const end = start + numPerPage;
+				const pageSubmissions = submissions.slice(start, end)
+		
+				// Generate HATEOAS links for surrounding pages.
+				const links = {};
+				if (page < lastPage) {
+					links.nextPage = `/${assignmentId}/submissions?page=${page + 1}`;
+					links.lastPage = `/${assignmentId}/submissions?page=${lastPage}`;
+				}
+				if (page > 1) {
+					links.prevPage = `/${assignmentId}/submissions?page=${page - 1}`;
+					links.firstPage = `/${assignmentId}/?page=1`;
+				}
+		
+				res.status(200).json({
+					submissions: pageSubmissions,
+					pageNumber: page,
+					totalPages: lastPage,
+					pageSize: numPerPage,
+					totalCount: submissions.length,
+					links: links
+				});	
+			} else {
+				res.status(403).send({
+					error: "The request was not made by an authenticated User"
+				})
 			}
-			if (page > 1) {
-				links.prevPage = `/${assignmentId}/submissions?page=${page - 1}`;
-				links.firstPage = `/${assignmentId}/?page=1`;
-			}
-	
-			res.status(200).json({
-				submissions: pageSubmissions,
-				pageNumber: page,
-				totalPages: lastPage,
-				pageSize: numPerPage,
-				totalCount: submissions.length,
-				links: links
-			});	
 		} else {
-			res.status(403).send({
-				error: "The request was not made by an authenticated User"
-			})
+			next()
 		}
 	} else {
 		next()

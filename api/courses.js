@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const crypto = require('crypto')
+const crypto = require('crypto');
+const e = require('express');
 const fs = require('fs');
 const { optionalAuthentication, requireAuthentication } = require('../lib/auth');
 
@@ -95,7 +96,7 @@ router.get('/:id', async function (req, res, next) {
  */
 router.put('/:id', optionalAuthentication, requireAuthentication, async function (req, res, next) {
 	// Check if admin or instructor
-	if ( ( req.user && req.user.role == 'admin' ) || ( req.user && req.user.id == req.body.instructorId) ) {
+	if ( req.user.role == 'admin' || req.user.id.toString() == req.body.instructorId ) {
 		if (validateAgainstSchema(req.body, courseSchema)) {
 			const updateSuccessful = await updateCourseById(req.params.id, req.body)
 			if (updateSuccessful) {
@@ -119,7 +120,7 @@ router.put('/:id', optionalAuthentication, requireAuthentication, async function
  * Route to delete a course by ID
  */
 router.delete('/:id', optionalAuthentication, requireAuthentication, async function (req, res, next) {
-	if (req.user && req.user.role == 'admin') {
+	if (req.user.role == 'admin') {
 		const deleteSuccessful = await deleteCourseById(req.params.id)
 		if (deleteSuccessful) {
 			res.status(204).end();
@@ -181,10 +182,8 @@ router.patch('/:id/students', optionalAuthentication, requireAuthentication, asy
 	const course = await getCourseById(req.params.id)
 	//Check if course exists
 	if (course) {
-
 		// Check if admin or instructor
-		if ( ( req.user && req.user.role == 'admin' ) || ( req.user && req.user.id == course.instructorId) ) {
-
+		if ( req.user.role == 'admin' || req.user.id.toString() == course.instructorId ) {
 			if (validateAgainstSchema(req.body, studentUpdateSchema)) {
 				const updateSuccessful = await updateCourseStudents(req.params.id, req.body)
 				if (updateSuccessful) {
@@ -197,6 +196,10 @@ router.patch('/:id/students', optionalAuthentication, requireAuthentication, asy
 					err: "The request body was either not present or did not contain proper fields"
 				})
 			}
+		} else {
+			res.status(403).send({
+				error: "The request was not made by an authenticated User"
+			})
 		}
 	} else {
 		next()
@@ -213,7 +216,7 @@ router.get('/:id/roster', optionalAuthentication, requireAuthentication, async f
 	if (course) {
 
 		// Check if admin or instructor
-		if ( ( req.user && req.user.role == 'admin' ) || ( req.user && req.user.id == course.instructorId) ) {
+		if ( req.user.role == 'admin' || req.user.id.toString() == course.instructorId) {
 
 			students = await getCourseStudents(courseId)
 			if (students) {

@@ -13,7 +13,7 @@ const courseSchema = {
 	section: {required: true},
 	name: {required: true},
 	description: {required: true},
-	teacher: {required: true},
+	instructorId: {required: true},
 	students: {required: false}
 }
 
@@ -84,7 +84,7 @@ exports.updateCourseById = async function updateCourse(id, course) {
 		section: course.section,
 		name: course.name,
 		description: course.description,
-		teacher: course.teacher,
+		instructorId: course.instructorId,
 		students: course.students
 	}
 
