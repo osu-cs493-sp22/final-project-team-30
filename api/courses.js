@@ -147,7 +147,9 @@ router.get('/:id/students', optionalAuthentication, requireAuthentication, async
 
 			const students = await getCourseStudents(req.params.id)
 			if(students) {
-				res.status(200).send(students)
+				res.status(200).json({
+					students: students
+				})
 			} else {
 				next()
 			}
