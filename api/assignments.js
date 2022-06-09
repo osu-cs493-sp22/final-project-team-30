@@ -205,7 +205,7 @@ router.post('/:assignmentId/submissions', optionalAuthentication, requireAuthent
 /*
  * Route to get submissions
  */
-router.get('/:assignmentId/submissions', optionalAuthentication, requireAuthentication, async function (req, res) {
+router.get('/:assignmentId/submissions', optionalAuthentication, requireAuthentication, async function (req, res, next) {
 	const assignmentId = req.params.assignmentId
 	const assignment = await getAssignmentById(assignmentId)
 	
