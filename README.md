@@ -4,79 +4,111 @@ CS 493 Final Project - Team 30
 
 ## Actions and Endpoints
 
-Course roster download
-
--   CSV format
-
--   GET /courses/{id}/roster
-
-Assignment submission creation
-
--   POST /assignments/{id}/submissions
-
--   GET /assignments/{id}/submissions
-
-User data fetching
-
--   GET /users/{id}
-
-Course information fetching
-
--   GET /courses
-
--   GET /courses/{id}
-
--   GET /courses/{id}/students
-
--   GET /courses/{id}/assignments
+| Method | Path | Description |
+| --- | --- | --- |
+| POST | /users | Create a new User. |
+| POST | /users/login | Log in a User. |
+| GET | /users/{id} | Fetch data about a specific User. |
+| GET | /courses | Fetch the list of all Courses. |
+| POST | /courses | Create a new course. |
+| GET | /courses/{id} | Fetch data about a specific Course. |
+| PATCH | /courses/{id} | Update data for a specific Course. |
+| DELETE | /courses/{id} | Remove a specific Course from the database. |
+| GET | /courses/{id}/students | Fetch a list of the students enrolled in the Course. |
+| POST | /courses/{id}/students | Update enrollment for a Course. |
+| GET | /courses/{id}/roster | Fetch a CSV file containing list of the students enrolled in the Course. |
+| GET | /courses/{id}/assignments | Fetch a list of the Assignments for the Course. |
+| POST | /assignments | Create a new Assignment. |
+| GET | /assignments/{id} | Fetch data about a specific Assignment. |
+| PATCH | /assignments/{id}] | Update data for a specific Assignment. |
+| DELETE | /assignments/{id} | Remove a specific Assignment from the database. |
+| GET | /assignments/{id}/submission | Fetch the list of all Submissions for an Assignment. |
+| POST | /assignments/{id}/submissions | Create a new Submission for an Assignment. |
 
 ## Data Schema
 
--   Users
+### Users
 
-    -   ID
+```
+// An object representing information about a Tarpaulin application user.
+{
+  // Full name of the User.
+  name: string,
 
-    -   name
+  // Email address for the User.  This is required to be unique among all Users.
+  email: string,
 
-    -   role
+  // The User's plain-text password.  This is required when creating a new User and when logging in.
+  password: string,
 
-    -   email
+  // Permission role of the User.  Can be either 'admin', 'instructor', or 'student'.
+  role: string
+}
+```
 
--   Courses
+### Courses
 
-    -   subject
+```
+// An object representing information about a specific course. 
+{
+  // Short subject code.
+  subject: string,
 
-    -   code
+  // Course number.
+  number: string,
 
-    -   Section
+  // Course title.
+  title: string,
 
-    -   Name
+  // Academic term in which Course is offered.
+  term: string,
+    
+  // ID for Course instructor.  Exact type/format will depend on your implementation but will likely be either an integer or a string.  This ID must correspond to a User with the 'instructor' role. 
+  instructorId: string
 
-    -   description
+}
+```
 
-    -   teacher
+### Assignments
 
-    -   students
+```
+// An object representing information about a single assignment. 
+{
+  // ID of the Course associated with the Assignment.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
+  courseId: string,
+  
+  // Assignment description.
+  title: string,
 
--   Assignments
+  // Possible points for the Assignment.
+  points: integer,
 
-    -   id
+  // Date and time Assignment is due.  Should be in ISO 8601 format. 
+  due: string
+}
+```
 
-    -   Due
+###  Submissions
 
-    -   Name
+```
+// An object representing information about a single student submission for an Assignment.
+{
+  // ID of the Assignment to which the Submission corresponds.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
+  assignmentId: string,
+  
+  // ID of the Student who created the submission.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
+  studentId: string,
 
-    -   description
-
-    -   courseID
-
--   Submissions
-
-    -   studentID
-
-    -   assignmentID
-
-    -   Time submitted
+  // Date and time Submission was made.  Should be in ISO 8601 format.
+  timestamp: string,
+    
+  // The grade, in points, assigned to the student for this sumbission, if one is assigned.  Should not be accepted during submission creation, only via update. 
+  grade: number,
+    
+  // When the Submission is being created, this will be the binary data contained in the submitted file.  When Submission information is being returned from the API, this will contain the URL from which the file can be downloaded.
+  file: string
+}
+```
 
 ## Docker Compose 
 
@@ -122,54 +154,9 @@ After this, or whenever the changes are ready to be merged a [pull request](http
 
 ## Team Members
 
-Garett Goodlake
----------------
-
-**Email:** goodlakg\@oregonstate.edu
-
-**GitHub:** pyrothei
-
-**Responsible For:**
-- Course Entity Endpoints
-- Assignment Entity
-- Course Roster Download
-
-Benjiman Walsh
---------------
-
-**Email:** walshb\@oregonstate.edu
-
-**GitHub:** walshb421
-
-**Responsible For: **
-
-- Docker and Docker Compose
-- Testing/Demo Workflow
-- Rate Limiting
-
-Timur Ermoshkin
----------------
-
-**Email: ermoshkt\@oregonstate.edu**
-
-**GitHub:** ermoshkt
-
-**Responsible For:**
-
-- Set up Basic API server and Directory Structure
-- Pagination
-- Example Data
-
-
-Eric Hoang
-----------
-
-**Email:** hoanger\@oregonstate.edu
-
-**GitHub:** hoanger9
-
-**Responsible For:**
-
-- User Entity
-- User authentication
-- Submission entity
+| Name | Github | ONID | Responsibilities |
+| ---  | --- | --- | --- |
+| Garett Goodlake | pyrothei | goodlakg\@oregonstate.edu | Course Entity Endpoint, Assignment Entity, Course Roster Download |
+| Benjiman Walsh | walshb421  | walshb\@oregonstate.edu | Docker and Docker Compose, Testing/Demo Workflow, Rate Limiting |
+| Timur Ermoshkin | ermoshkt | ermoshkt\@oregonstate.edu | Set up Basic API server and Directory Structure, Pagination, Example Data |
+| Eric Hoang | hoanger9 | hoanger\@oregonstate.edu | User Entity, User authentication, Submission entity |
