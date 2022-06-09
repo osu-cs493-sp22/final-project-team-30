@@ -4,18 +4,15 @@ const api = require('./api')
 
 const { connectToDb } = require("./lib/mongo")
 const { connectToRedis, rateLimit } = require('./lib/rate')
-//const { optionalAuthentication } = require('./lib/auth')
 
 const app = express()
 const port = process.env.PORT || 8000
 
 app.use(rateLimit)
-//app.use(optionalAuthentication)
 
 app.use(morgan('dev'))
 app.use(express.json())
 
-  //exports.upload = require("./lib/multer").initializeMulter()
   app.use('/', api)
 
   app.use('*', function (req, res, next) {
@@ -29,7 +26,7 @@ app.use(express.json())
     res.status(500).send({
       err: "An error occurred. Try again later.",
     })
-  });
+  })
 
 
 connectToRedis( () => {
