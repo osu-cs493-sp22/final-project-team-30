@@ -173,7 +173,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"subject\": \"cs\",\r\n    \"courseCode\": 493,\r\n    \"section\": 1,\r\n    \"name\": \"Cloud Application Development\",\r\n    \"description\": \"servers n databases n lots of dat stuff\",\r\n    \"teacher\": \"629fdc7a07233ca3ce3c54f9\",\r\n    \"students\": [\r\n        \"629fdd0c852f57fc5e1bd35c\"\r\n    ]\r\n}",
+							"raw": "{\r\n    \"subject\": \"cs\",\r\n    \"courseCode\": 123,\r\n    \"section\": 1,\r\n    \"name\": \"Some other course\",\r\n    \"description\": \"servers n databases n lots of dat stuff\",\r\n    \"instructorId\": \"629fdc7a07233ca3ce3c54f9\",\r\n    \"students\": [\r\n        \"629fdd0c852f57fc5e1bd35c\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -227,7 +227,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"subject\": \"cs\",\r\n    \"courseCode\": 493,\r\n    \"section\": 1,\r\n    \"name\": \"UPDATED Cloud Application Development\",\r\n    \"description\": \"servers n databases n lots of dat stuff\",\r\n    \"teacher\": \"Rob Hess\",\r\n    \"students\": [\r\n        \"Ben Walsh\",\r\n        \"Garett Goodlake\",\r\n        \"Timmy\",\r\n        \"Eric Hoang\"\r\n    ]\r\n}",
+							"raw": "{\r\n    \"subject\": \"cs\",\r\n    \"courseCode\": 493,\r\n    \"section\": 1,\r\n    \"name\": \"UPDATED Cloud Application Development\",\r\n    \"description\": \"servers n databases n lots of dat stuff\",\r\n    \"instructorId\": \"Rob Hess\",\r\n    \"students\": [\r\n        \"Ben Walsh\",\r\n        \"Garett Goodlake\",\r\n        \"Timmy\",\r\n        \"Eric Hoang\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -367,7 +367,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"add\": [\r\n    ],\r\n    \"remove\": [\r\n        501\r\n    ]\r\n}",
+							"raw": "{\r\n    \"add\": [\r\n        \"629fdd0c852f57fc5e1bd35c\"\r\n    ],\r\n    \"remove\": [\r\n        \r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -467,6 +467,42 @@
 									"path": [
 										"users",
 										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fetch Student User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{studentToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/users/:userId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "629fdd0c852f57fc5e1bd35c"
+										}
 									]
 								}
 							},
@@ -596,7 +632,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"teacher\",\r\n\t\"email\": \"teacher@gmail.com\",\r\n\t\"password\": \"hunter2\", \r\n\t\"role\": \"teacher\"\r\n}",
+									"raw": "{\r\n    \"name\": \"teacher\",\r\n\t\"email\": \"teacher@gmail.com\",\r\n\t\"password\": \"hunter2\", \r\n\t\"role\": \"instructor\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -617,38 +653,62 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Fetch Teacher User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{teacherToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/users/:userId",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "629fdc7a07233ca3ce3c54f9"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
 				{
-					"name": "Fetch User",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
+					"name": "Delete User By Id",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mjk5N2E1ODBkYTU5YTk2YWZhYTFiNDMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2NTQ2NDMzNDIsImV4cCI6MTY1NDcyOTc0Mn0.6tmGsNtETMK8icZQBppIn1vIzBoNO2xvUr13ccKYtoc",
+									"value": "{{adminToken}}",
 									"type": "string"
 								}
 							]
 						},
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\t\"email\": \"erichoang@gmail.com\",\r\n\t\"password\": \"hunter2\", \r\n\t\"name\": \"Eric Hoang\",\r\n\t\"role\": \"student\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "http://localhost:8000/users/62997a580da59a96afaa1b43",
+							"raw": "http://localhost:8000/users/:userId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -656,7 +716,13 @@
 							"port": "8000",
 							"path": [
 								"users",
-								"62997a580da59a96afaa1b43"
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "62997aefca6e3ff4cde0cfb1"
+								}
 							]
 						}
 					},
@@ -725,7 +791,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Submission",
+					"name": "Get Submission By Id",
 					"request": {
 						"method": "GET",
 						"header": []
