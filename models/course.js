@@ -13,7 +13,7 @@ const courseSchema = {
 	section: {required: true},
 	name: {required: true},
 	description: {required: true},
-	teacher: {required: true},
+	instructorId: {required: true},
 	students: {required: false}
 }
 
