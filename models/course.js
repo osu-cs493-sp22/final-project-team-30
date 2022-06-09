@@ -1,4 +1,5 @@
 const { ObjectID, GridFSBucket, ObjectId } = require('mongodb')
+const fs = require('fs')
 
 const { getDbReference } = require('../lib/mongo');
 const { extractValidFields } = require('../lib/validation');
@@ -16,6 +17,15 @@ const courseSchema = {
 	students: {required: false}
 }
 
+/*
+ * Schema describing fields for updating student enrollment
+ */
+const studentUpdateSchema = {
+	add: {required: true},
+	remove: {required: true}
+}
+
+exports.studentUpdateSchema = studentUpdateSchema
 exports.courseSchema = courseSchema
 
 /*
@@ -42,10 +52,16 @@ exports.getCourseById = async function getCourseById(id) {
 	const db = getDbReference();
 	const collection = db.collection('courses');
 
+	if (!ObjectId.isValid(id)) {
+        return null
+	}
+
 	// Search the collection for an course matching the ID
 	const course = await collection.aggregate([
 		{ $match: { _id: new ObjectId(id) } },
 	]).toArray()
+
+	delete course[0].students
 
 	return course[0]
 }
@@ -58,6 +74,10 @@ exports.updateCourseById = async function updateCourse(id, course) {
 	const db = getDbReference();
 	const collection = db.collection('courses');
 
+	if (!ObjectId.isValid(id)) {
+        return null
+	}
+
 	const newCourseValues = {
 		subject: course.subject,
 		courseCode: course.courseCode,
@@ -66,6 +86,10 @@ exports.updateCourseById = async function updateCourse(id, course) {
 		description: course.description,
 		instructorId: course.instructorId,
 		students: course.students
+	}
+
+	if (newCourseValues.students != course.students) {
+		newCourseValues.students == course.students
 	}
 	
 	// Update
@@ -85,6 +109,10 @@ exports.deleteCourseById = async function deleteCourseById(id) {
 	// Open up the db
 	const db = getDbReference();
 	const collection = db.collection('courses');
+
+    if (!ObjectId.isValid(id)) {
+        return null
+	}
 	
 	// Delete the corresponding course
 	const result = await collection.deleteOne({
@@ -95,6 +123,9 @@ exports.deleteCourseById = async function deleteCourseById(id) {
 	return result.deletedCount > 0;
 }
 
+/*
+ * Get a page when the user requests to see course list
+ */
 exports.getCoursePage = async function getCoursePage(page) {
 	// Open up the db
 	const db = getDbReference();
@@ -116,6 +147,8 @@ exports.getCoursePage = async function getCoursePage(page) {
 		.limit(pageSize)
 		.toArray();
 
+	delete results[0].students
+
 	return {
 		courses: results,
 		page: page,
@@ -125,14 +158,16 @@ exports.getCoursePage = async function getCoursePage(page) {
 	};	
 }
 
+/*
+ * Lists the userId's of students taking a course
+ */
 exports.getCourseStudents = async function getCourseStudents(id) {
 	// Open up the db
 	const db = getDbReference();
 	const collection = db.collection('courses');
 
-	// Without this if someone enters a wrong id thats less chars it crashes..
-	if (id.length < 24) {
-		return null
+    if (!ObjectId.isValid(id)) {
+        return null
 	}
 
 	// Find the
@@ -154,17 +189,19 @@ exports.getCourseStudents = async function getCourseStudents(id) {
 	return courseStudents[0].students
 }
 
+/*
+ * Lists the assignments in a given course
+ */
 exports.getCourseAssignments = async function getCourseAssignments(id) {
 	// Open up the db
 	const db = getDbReference();
 	const collection = db.collection('courses');	
 
-	// Without this if someone enters a wrong id thats less chars it crashes..
-	if (id.length < 24) {
-		return null
+    if (!ObjectId.isValid(id)) {
+        return null
 	}
 
-	// Find the
+	// Find the course
 	const course = await collection.aggregate([
 		{ $match: { _id: new ObjectId(id) } },
 		{
@@ -177,5 +214,60 @@ exports.getCourseAssignments = async function getCourseAssignments(id) {
 		}
 	]).toArray()
 
-	return course[0]
+	return course[0].assignments
+}
+
+/*
+ * Updates student enrollments in a course
+ */
+exports.updateCourseStudents = async function updateCourseStudents(id, studentArr) {
+	// Open up the db
+	const db = getDbReference();
+	const collection = db.collection('courses');
+
+    if (!ObjectId.isValid(id)) {
+        return null
+	}
+	// Delete students from existing course
+	const remResult = await collection.updateOne(
+		{ _id: new ObjectId(id ) },
+		{ $pull: { students: { $in: studentArr.remove}}}
+	)
+
+	// Add student arr to existing course
+	const addResult = await collection.updateOne(
+		{ _id: new ObjectId(id) },
+		{ $push: { students: { $each: studentArr.add }} }
+	)
+
+	return (remResult.matchedCount > 0 && addResult.matchedCount > 0)
+}
+
+/*
+ * Takes student numbers and turns into csv about them
+ */
+exports.studentToCsv = async function studentToCsv(students) {
+	const db = getDbReference()
+	const collection = db.collection('users')
+
+	/* Convert studentsId to objectId */
+	for (let i = 0; i < students.length; i++) {
+		students[i] = new ObjectId(students[i])
+	}
+
+	/* Look through collection where id's match */
+	const studentInfo = await collection.find({ _id: { $in: students } }).toArray()
+	
+	for (let i = 0; i < studentInfo.length; i++) {
+		delete studentInfo[i].password
+		delete studentInfo[i].role
+	}
+
+	/* Turn data into csv */
+	let csv = ''
+	let data = studentInfo.map(o => Object.values(o).join(',')).join('\n');
+
+	csv += data
+	
+	return csv
 }

@@ -9,7 +9,7 @@ services:
       volumes:
          - ./initMongo.js:/docker-entrypoint-initdb.d/mongo-init.js
    
-   redis:
+   redis-server:
       image: redis
 
    api:

@@ -623,7 +623,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mjk5N2E1ODBkYTU5YTk2YWZhYTFiNDMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2NTQ2NDMzNDIsImV4cCI6MTY1NDcyOTc0Mn0.6tmGsNtETMK8icZQBppIn1vIzBoNO2xvUr13ccKYtoc",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Mjk5NjA0ZWM2M2E4MDllYjU1OGYwMTIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTY1NDIyNTc2NCwiZXhwIjoxNjU0MzEyMTY0fQ.5i4FaL1PgQq1jg4qFEjKwlFJdAEBs3fFrkm7BOglX1w",
 											"type": "string"
 										}
 									]
