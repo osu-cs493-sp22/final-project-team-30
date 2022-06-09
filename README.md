@@ -154,50 +154,9 @@ After this, or whenever the changes are ready to be merged a [pull request](http
 
 ## Team Members
 
-### Garett Goodlake
-
-**Email:** goodlakg\@oregonstate.edu
-
-**GitHub:** pyrothei
-
-**Responsible For:**
-- Course Entity Endpoints
-- Assignment Entity
-- Course Roster Download
-
-### Benjiman Walsh
-
-**Email:** walshb\@oregonstate.edu
-
-**GitHub:** walshb421
-
-**Responsible For:**
-
-- Docker and Docker Compose
-- Testing/Demo Workflow
-- Rate Limiting
-
-### Timur Ermoshkin
-
-**Email: ermoshkt\@oregonstate.edu**
-
-**GitHub:** ermoshkt
-
-**Responsible For:**
-
-- Set up Basic API server and Directory Structure
-- Pagination
-- Example Data
-
-
-### Eric Hoang
-
-**Email:** hoanger\@oregonstate.edu
-
-**GitHub:** hoanger9
-
-**Responsible For:**
-
-- User Entity
-- User authentication
-- Submission entity
+| Name | Github | ONID | Responsibilities |
+| ---  | --- | --- | --- |
+| Garett Goodlake | pyrothei | goodlakg\@oregonstate.edu | Course Entity Endpoint, Assignment Entity, Course Roster Download |
+| Benjiman Walsh | walshb421  | walshb\@oregonstate.edu | Docker and Docker Compose, Testing/Demo Workflow, Rate Limiting |
+| Timur Ermoshkin | ermoshkt | ermoshkt\@oregonstate.edu | Set up Basic API server and Directory Structure, Pagination, Example Data |
+| Eric Hoang | hoanger9 | hoanger\@oregonstate.edu | User Entity, User authentication, Submission entity |
