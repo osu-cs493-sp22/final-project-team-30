@@ -90,7 +90,7 @@ CS 493 Final Project - Team 30
 
 ###  Submissions
 
-'''
+```
 // An object representing information about a single student submission for an Assignment.
 {
   // ID of the Assignment to which the Submission corresponds.  Exact type/format will depend on your implementation but will likely be either an integer or a string.
