@@ -53,17 +53,21 @@ exports.getCourseById = async function getCourseById(id) {
 	const collection = db.collection('courses');
 
 	if (!ObjectId.isValid(id)) {
-        return null
+        	return null
 	}
 
 	// Search the collection for an course matching the ID
 	const course = await collection.aggregate([
 		{ $match: { _id: new ObjectId(id) } },
 	]).toArray()
+       
+        if(course[0]) {	
+	   delete course[0].students
+	   return course[0]
+	}
 
-	delete course[0].students
+	return null
 
-	return course[0]
 }
 
 /*
